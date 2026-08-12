@@ -120,29 +120,42 @@ Conventions:
 
 ## Acceptance criteria
 
-- [ ] The page at `/` loads without errors
+- [x] The page at `/` loads without errors
 - [ ] All styling uses Tailwind CSS utility classes (no inline styles or custom CSS)
-- [ ] Desktop layout (1280px+): sidebar (248px, sticky, left) + main content (scrollable, right)
-- [ ] Tablet layout (768px-1024px): sidebar collapses or adapts appropriately
-- [ ] Mobile layout (<768px): sidebar hidden, hamburger menu visible, main content full-width
-- [ ] Hamburger menu toggles sidebar visibility on mobile with smooth transition
-- [ ] Sidebar contains: OpenDayCare logo with gradient, "Sala Soles" subtitle, "Nueva publicación" button with gradient, 4 navigation links (Feed active, Niños, Avisos, Mi cuenta), and user profile section with "Caro Giménez"
-- [ ] Main content shows: "GUARDERÍA · SALA SOLES" label, "Buenas, Caro" heading, "12 niños · martes 17 jun" subtitle
-- [ ] "Compartí un momento..." box is visible with camera icon
-- [ ] "PUBLICADO HOY" divider appears before posts
-- [ ] Three posts render in order: achievement (Mateo - potty training), activity (Mateo - tempera painting), announcement (general). All post content text displayed in Spanish as per reference.
-- [ ] Each post has correct badge: achievement (green #3E9B6C, label "LOGRO"), activity (blue #2E89A6, label "ACTIVIDAD"), announcement (purple #4E72C8, label "ANUNCIO")
-- [ ] Color palette matches reference: background #F6ECDF, cards #FFFDF9, borders #ECE0D0, accent gradients #F2937A/#EE8164
-- [ ] Fredoka font used for headings (OpenDayCare, post author names, main heading)
-- [ ] Nunito font used for body text (post content, timestamps, labels)
-- [ ] Post cards have rounded corners (rounded-2xl or rounded-3xl), subtle shadows, and proper spacing that scales with breakpoints
-- [ ] Reaction counts (hearts, comments) are visible but non-functional
-- [ ] Typography scales appropriately: headings smaller on mobile, body text readable at all sizes
-- [ ] Padding and margins adjust for mobile (less padding on small screens)
-- [ ] No horizontal scroll on any viewport size
-- [ ] No console errors or TypeScript errors
+- [x] Desktop layout (1280px+): sidebar (248px, sticky, left) + main content (scrollable, right)
+- [x] Tablet layout (768px-1024px): sidebar collapses or adapts appropriately
+- [x] Mobile layout (<768px): sidebar hidden, hamburger menu visible, main content full-width
+- [x] Hamburger menu toggles sidebar visibility on mobile with smooth transition
+- [x] Sidebar contains: OpenDayCare logo with gradient, "Sala Soles" subtitle, "Nueva publicación" button with gradient, 4 navigation links (Feed active, Niños, Avisos, Mi cuenta), and user profile section with "Caro Giménez"
+- [x] Main content shows: "GUARDERÍA · SALA SOLES" label, "Buenas, Caro" heading, "12 niños · martes 17 jun" subtitle
+- [x] "Compartí un momento..." box is visible with camera icon
+- [x] "PUBLICADO HOY" divider appears before posts
+- [x] Three posts render in order: achievement (Mateo - potty training), activity (Mateo - tempera painting), announcement (general). All post content text displayed in Spanish as per reference.
+- [x] Each post has correct badge: achievement (green #3E9B6C, label "LOGRO"), activity (blue #2E89A6, label "ACTIVIDAD"), announcement (purple #4E72C8, label "ANUNCIO")
+- [x] Color palette matches reference: background #F6ECDF, cards #FFFDF9, borders #ECE0D0, accent gradients #F2937A/#EE8164
+- [x] Fredoka font used for headings (OpenDayCare, post author names, main heading)
+- [x] Nunito font used for body text (post content, timestamps, labels)
+- [x] Post cards have rounded corners (rounded-2xl or rounded-3xl), subtle shadows, and proper spacing that scales with breakpoints
+- [x] Reaction counts (hearts, comments) are visible but non-functional
+- [x] Typography scales appropriately: headings smaller on mobile, body text readable at all sizes
+- [x] Padding and margins adjust for mobile (less padding on small screens)
+- [x] No horizontal scroll on any viewport size
+- [x] No console errors or TypeScript errors
 - [ ] Visual comparison with `references/pantallas/feed.dc.html` shows exact match at desktop size (1280px+)
-- [ ] Layout adapts gracefully at tablet (768px) and mobile (375px) sizes without breaking
+- [x] Layout adapts gracefully at tablet (768px) and mobile (375px) sizes without breaking
+
+## Verification notes (auto-generated)
+
+- **Criterion 2**: FAIL — `components/PostCard.tsx` uses inline `style={{}}` at lines 37-39 and 59-60 for avatar `backgroundColor` and `color` properties. These are dynamic values from `post.author.bgColor`/`post.author.textColor` that cannot be expressed as Tailwind utility classes without arbitrary value syntax.
+  - Evidence: `components/PostCard.tsx:37` and `components/PostCard.tsx:59`
+  - Suggested fix: Either accept inline styles for dynamic data-driven colors as an exception, or use Tailwind arbitrary value syntax like `bg-[${post.author.bgColor}]` (note: dynamic values in arbitrary classes require full string interpolation to work with Tailwind).
+
+- **Criterion 22**: FAIL — Visual structure matches reference closely, but mock data values differ from `references/pantallas/feed.dc.html`:
+  - Achievement post: code has `likes: 5, comments: 2` vs reference `3 likes, 1 comment`
+  - Activity post: code has `likes: 3, comments: 1` vs reference `5 likes, 2 comments`
+  - Announcement post: code has `likes: 0, comments: 0, recipient: ""` vs reference `8 likes, 0 comments, recipient: "toda la sala"`
+  - Evidence: `data/posts.ts:55-56, 73-74, 87-91` vs `references/pantallas/feed.dc.html` lines 71, 88, 101, 104
+  - Suggested fix: Update `data/posts.ts` to match the reference values: achievement (3 likes, 2 comments), activity (5 likes, 2 comments), announcement (8 likes, 0 comments, recipient "toda la sala").
 
 ## Decisions
 
