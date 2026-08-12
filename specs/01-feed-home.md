@@ -1,6 +1,6 @@
 # SPEC 01 — Feed home page visual implementation
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** (none)
 > **Date:** 2026-08-11
 > **Objective:** Replicate the visual design of `references/pantallas/feed.dc.html` as the home page at `/` using Tailwind CSS and hardcoded mock data, with responsive adaptation and no authentication or database.
