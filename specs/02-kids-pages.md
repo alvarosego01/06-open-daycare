@@ -1,6 +1,6 @@
 # SPEC 02 — Kids listing and profile pages
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 01
 > **Date:** 2026-08-12
 > **Objective:** Implement the kids listing page at `/kids` and kid profile page at `/kids/{id}` using mock data, matching the visual design from `references/pantallas/ninos.dc.html` and `references/pantallas/perfil-nino.dc.html`.
@@ -126,29 +126,35 @@ Conventions:
 
 ## Acceptance criteria
 
-- [ ] `/kids` loads without errors
-- [ ] `/kids/{id}` loads without errors for valid kid IDs
-- [ ] All styling uses Tailwind CSS (inline styles allowed only for dynamic data-driven colors)
-- [ ] Desktop (1280px+): 2-column kid grid, side-by-side profile layout
-- [ ] Mobile (<768px): single-column grid, stacked profile
-- [ ] Sidebar shows "Niños" as active item (bg #FBE3D8, text #D9583C)
-- [ ] Kids listing: "GESTIÓN" label, "Niños" heading, "Agregar niño" button
-- [ ] Search bar visible with placeholder "Buscar niño…" (no functionality)
-- [ ] "SALA SOLES" section header with "8 niños" count
-- [ ] 8 kid cards with correct data, badges, and hover effect
-- [ ] Badges can coexist (allergy + VINCULAR)
-- [ ] Each card links to `/kids/{kid.id}`
-- [ ] Profile: back link, avatar, name, age/room, "Editar" button
-- [ ] Allergy alert box shown when notes exist
-- [ ] Info card: birth date, room, enrollment
-- [ ] "Resumen del día" button visible (non-functional)
-- [ ] Parents panel with ACTIVA/PENDIENTE status badges
-- [ ] "Vincular otro padre" link visible (non-functional)
-- [ ] Colors match reference palette
-- [ ] Fredoka for headings, Nunito for body
-- [ ] No horizontal scroll on any viewport
+- [x] `/kids` loads without errors
+- [x] `/kids/{id}` loads without errors for valid kid IDs
+- [x] All styling uses Tailwind CSS (inline styles allowed only for dynamic data-driven colors)
+- [x] Desktop (1280px+): 2-column kid grid, side-by-side profile layout
+- [x] Mobile (<768px): single-column grid, stacked profile
+- [x] Sidebar shows "Niños" as active item (bg #FBE3D8, text #D9583C)
+- [x] Kids listing: "GESTIÓN" label, "Niños" heading, "Agregar niño" button
+- [x] Search bar visible with placeholder "Buscar niño…" (no functionality)
+- [x] "SALA SOLES" section header with "8 niños" count
+- [x] 8 kid cards with correct data, badges, and hover effect
+- [x] Badges can coexist (allergy + VINCULAR)
+- [x] Each card links to `/kids/{kid.id}`
+- [x] Profile: back link, avatar, name, age/room, "Editar" button
+- [x] Allergy alert box shown when notes exist
+- [x] Info card: birth date, room, enrollment
+- [x] "Resumen del día" button visible (non-functional)
+- [x] Parents panel with ACTIVA/PENDIENTE status badges
+- [x] "Vincular otro padre" link visible (non-functional)
+- [x] Colors match reference palette
+- [x] Fredoka for headings, Nunito for body
+- [x] No horizontal scroll on any viewport
 - [ ] No TypeScript or lint errors
-- [ ] Visual match with reference HTML at 1280px+
+- [x] Visual match with reference HTML at 1280px+
+
+## Verification notes (auto-generated)
+
+- **Criterion 22**: `pnpm run lint` fails with 2 errors in `references/pantallas/support.js` (line 196: `ReactDOM.render` deprecated; line 1089: `module` variable assignment). These errors are in a pre-existing design mockup support file, not in the application code. TypeScript (`npx tsc --noEmit`) passes cleanly with zero errors.
+  - Evidence: `eslint.config.mjs` does not exclude `references/` folder; lint output shows errors only in `references/pantallas/support.js`
+  - Suggested fix: Add `"references/**"` to the `globalIgnores()` array in `eslint.config.mjs` to exclude design mockup files from linting
 
 ## Decisions
 
