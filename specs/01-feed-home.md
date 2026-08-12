@@ -1,6 +1,6 @@
 # SPEC 01 — Feed home page visual implementation
 
-> **Status:** Draft
+> **Status:** Approved
 > **Depends on:** (none)
 > **Date:** 2026-08-11
 > **Objective:** Replicate the visual design of `references/pantallas/feed.dc.html` as the home page at `/` using Tailwind CSS and hardcoded mock data, with responsive adaptation and no authentication or database.
@@ -14,7 +14,7 @@
 - Create a responsive layout: desktop shows sidebar (248px) + main content; mobile/tablet adapts appropriately
 - Create a sidebar component with responsive behavior: visible on desktop, collapsible/hidden on mobile with hamburger menu
 - Create a main content area with greeting header, "Compartí un momento" box, and post feed
-- Implement three post type variants: logro, actividad, and anuncio with distinct visual badges
+- Implement three post type variants: achievement, activity, and announcement with distinct visual badges
 - Use hardcoded mock data for posts (3 example posts)
 - Load and apply Fredoka (headings) and Nunito (body) fonts from Google Fonts
 - Apply the warm cream/peach color palette using Tailwind config (#F6ECDF background, #FFFDF9 cards, #F2937A/#EE8164 accents, #3F362E text)
@@ -29,7 +29,7 @@
 - Database integration or dynamic data loading
 - "Nueva publicación" button functionality
 - "Editar" button functionality on posts
-- Photo upload or display in actividad posts (placeholder shown)
+- Photo upload or display in activity posts (placeholder shown)
 
 ## Data model
 
@@ -54,17 +54,17 @@ type PostBase = {
   comments: number;
 };
 
-type PostLogro = PostBase & {
-  type: "logro";
+type PostAchievement = PostBase & {
+  type: "achievement";
 };
 
-type PostActividad = PostBase & {
-  type: "actividad";
+type PostActivity = PostBase & {
+  type: "activity";
   photoPlaceholder?: string;
 };
 
-type PostAnuncio = PostBase & {
-  type: "anuncio";
+type PostAnnouncement = PostBase & {
+  type: "announcement";
   author: {
     name: string;
     icon: "megaphone";
@@ -73,28 +73,34 @@ type PostAnuncio = PostBase & {
   };
 };
 
-type Post = PostLogro | PostActividad | PostAnuncio;
+type Post = PostAchievement | PostActivity | PostAnnouncement;
 
 export const posts: Post[] = [
-  // 3 hardcoded example posts: 1 logro, 1 actividad, 1 anuncio
+  // 3 hardcoded example posts: 1 achievement, 1 activity, 1 announcement
 ];
 ```
 
 Conventions:
 
 - Post types use discriminated union on `type` field
-- Colors match the reference: logro badge green (#3E9B6C), actividad badge blue (#2E89A6), anuncio badge purple (#4E72C8)
+- Colors match the reference: achievement badge green (#3E9B6C), activity badge blue (#2E89A6), announcement badge purple (#4E72C8)
 - Author initials rendered in circular avatars with background colors from reference
+- All user-facing text (post content, labels, buttons, navigation) must be in Spanish to match the reference design
+- Internal code terminology (type names, variables, functions) must be in English
 
 ## Implementation plan
 
-1. Update `tailwind.config.ts` (create if needed) to define custom colors matching the reference palette: `cream` (#F6ECDF), `card` (#FFFDF9), `border` (#ECE0D0), `accent` (#F2937A/#EE8164), `text-primary` (#3F362E), and badge colors (logro green, actividad blue, anuncio purple). Configure Fredoka and Nunito as custom font families.
+1. Update `tailwind.config.ts` (create if needed) to define custom colors matching the reference palette: `cream` (#F6ECDF), `card` (#FFFDF9), `border` (#ECE0D0), `accent` (#F2937A/#EE8164), `text-primary` (#3F362E), and badge colors (achievement green, activity blue, announcement purple). Configure Fredoka and Nunito as custom font families.
 
 2. Update `app/globals.css` to import Tailwind CSS and define base styles. Remove dark mode styles. Set base font-family to Nunito using Tailwind's `@apply` directive.
 
 3. Update `app/layout.tsx` to load Fredoka and Nunito fonts from Google Fonts. Remove Geist font imports. Update metadata title to "OpenDayCare - Sala Soles". Apply base Tailwind classes to `<body>`.
 
-4. Create `data/posts.ts` with the mock data structure containing 3 hardcoded posts: one logro (Mateo - orinal), one actividad (Mateo - pintando con témperas), and one anuncio general.
+4. Create `data/posts.ts` with the mock data structure containing 3 hardcoded posts: one achievement (Mateo - potty training), one activity (Mateo - painting with tempera), and one general announcement. All user-facing text content must be in Spanish to match the reference:
+   - Achievement post content: "¡Usó el orinal solito por primera vez! Estaba feliz de contárselo a todos. Un gran paso."
+   - Activity post content: "Pintamos con témperas esta mañana. Mateo eligió el azul para todo y se concentró un montón mezclando colores."
+   - Announcement post content: "El viernes salimos al parque por la mañana. Recuerden mandar gorra y una botellita de agua."
+   - Badge labels in UI: "LOGRO", "ACTIVIDAD", "ANUNCIO" (Spanish)
 
 5. Create `components/Sidebar.tsx` with the complete sidebar structure using Tailwind classes: OpenDayCare logo/branding, "Nueva publicación" button, navigation links (Feed, Niños, Avisos, Mi cuenta), and user profile section at the bottom. Implement responsive behavior:
    - Desktop (md+): Fixed 248px sidebar, visible always
@@ -102,7 +108,7 @@ Conventions:
    - Use Tailwind responsive prefixes (`md:flex`, `hidden md:block`, etc.)
    - Include mobile menu overlay with slide-in animation
 
-6. Create `components/PostCard.tsx` that renders a single post card using Tailwind classes. Accept a `Post` prop and conditionally render the correct badge (logro/actividad/anuncio) based on `post.type`. Include the author avatar, timestamp, recipient, content, and reaction counts (visual only). Ensure card padding, margins, and typography scale with breakpoints.
+6. Create `components/PostCard.tsx` that renders a single post card using Tailwind classes. Accept a `Post` prop and conditionally render the correct badge (achievement/activity/announcement) based on `post.type`. Include the author avatar, timestamp, recipient, content, and reaction counts (visual only). Ensure card padding, margins, and typography scale with breakpoints.
 
 7. Update `app/page.tsx` to import Sidebar and PostCard components, and the mock posts data. Compose the full responsive feed layout:
    - Desktop: Sidebar fixed left (248px) + main content scrollable right
@@ -124,8 +130,8 @@ Conventions:
 - [ ] Main content shows: "GUARDERÍA · SALA SOLES" label, "Buenas, Caro" heading, "12 niños · martes 17 jun" subtitle
 - [ ] "Compartí un momento..." box is visible with camera icon
 - [ ] "PUBLICADO HOY" divider appears before posts
-- [ ] Three posts render in order: logro (Mateo - orinal), actividad (Mateo - témperas), anuncio (general)
-- [ ] Each post has correct badge: logro (green #3E9B6C), actividad (blue #2E89A6), anuncio (purple #4E72C8)
+- [ ] Three posts render in order: achievement (Mateo - potty training), activity (Mateo - tempera painting), announcement (general). All post content text displayed in Spanish as per reference.
+- [ ] Each post has correct badge: achievement (green #3E9B6C, label "LOGRO"), activity (blue #2E89A6, label "ACTIVIDAD"), announcement (purple #4E72C8, label "ANUNCIO")
 - [ ] Color palette matches reference: background #F6ECDF, cards #FFFDF9, borders #ECE0D0, accent gradients #F2937A/#EE8164
 - [ ] Fredoka font used for headings (OpenDayCare, post author names, main heading)
 - [ ] Nunito font used for body text (post content, timestamps, labels)

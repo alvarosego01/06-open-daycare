@@ -45,3 +45,7 @@ When implementing UI, match colors, spacing, and typography from the mockups. Th
 
 ## WARNING NOT DO!
 - Está prohibido el uso de npm bajo ningún concepto, en su lugar usar ***pnpm***
+
+
+## Reglas de código
+-- Usar código limpio, nombres, funciones, variables, tipados, interfaces todo en ingles
