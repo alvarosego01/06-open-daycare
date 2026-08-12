@@ -41,4 +41,7 @@ When implementing UI, match colors, spacing, and typography from the mockups. Th
 
 ## Spec driven development
 - /spec usaremos esta skill para crear las especifiaciones
-- /spec-impl
+- /spec-impl usaremos esta skill para implementar las especificaciones creadas previamente con /spec
+
+## WARNING NOT DO!
+- Está prohibido el uso de npm bajo ningún concepto, en su lugar usar ***pnpm***
