@@ -2,14 +2,20 @@
 
 import { useState } from "react";
 
-export default function Sidebar() {
+type ActiveItem = "feed" | "kids" | "notices" | "account";
+
+type SidebarProps = {
+  activeItem?: ActiveItem;
+};
+
+export default function Sidebar({ activeItem = "feed" }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navItems = [
     {
+      key: "feed" as const,
       label: "Feed",
-      href: "#",
-      active: true,
+      href: "/",
       icon: (
         <svg
           width="19"
@@ -26,9 +32,9 @@ export default function Sidebar() {
       ),
     },
     {
+      key: "kids" as const,
       label: "Niños",
-      href: "#",
-      active: false,
+      href: "/kids",
       icon: (
         <svg
           width="19"
@@ -47,9 +53,9 @@ export default function Sidebar() {
       ),
     },
     {
+      key: "notices" as const,
       label: "Avisos",
       href: "#",
-      active: false,
       icon: (
         <svg
           width="19"
@@ -67,9 +73,9 @@ export default function Sidebar() {
       ),
     },
     {
+      key: "account" as const,
       label: "Mi cuenta",
       href: "#",
-      active: false,
       icon: (
         <svg
           width="19"
@@ -139,10 +145,10 @@ export default function Sidebar() {
       <nav className="flex flex-col gap-1 flex-1">
         {navItems.map((item) => (
           <a
-            key={item.label}
+            key={item.key}
             href={item.href}
             className={`flex items-center gap-3 py-[11px] px-3 rounded-xl text-[14.5px] ${
-              item.active
+              activeItem === item.key
                 ? "bg-[#FBE3D8] text-[#D9583C] font-extrabold"
                 : "bg-transparent text-[#6E6359] font-semibold"
             }`}
