@@ -16,6 +16,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 | Build | `npm run build` |
 | Lint | `npm run lint` |
 | Typecheck | `npx tsc --noEmit` |
+| Verify spec | `/spec-rev` |
 
 No test framework is configured.
 
@@ -40,8 +41,9 @@ When implementing UI, match colors, spacing, and typography from the mockups. Th
 - **Context7** — use for up-to-date framework/library documentation
 
 ## Spec driven development
-- /spec usaremos esta skill para crear las especifiaciones
+- /spec usaremos esta skill para crear las especificaciones
 - /spec-impl usaremos esta skill para implementar las especificaciones creadas previamente con /spec
+- /spec-rev usaremos este agente para verificar los criterios de aceptación del spec
 
 ## WARNING NOT DO!
 - Está prohibido el uso de npm bajo ningún concepto, en su lugar usar ***pnpm***
