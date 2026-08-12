@@ -35,7 +35,7 @@ type PostAnnouncement = Omit<PostBase, "author"> & {
   };
 };
 
-type Post = PostAchievement | PostActivity | PostAnnouncement;
+export type Post = PostAchievement | PostActivity | PostAnnouncement;
 
 export const posts: Post[] = [
   {
