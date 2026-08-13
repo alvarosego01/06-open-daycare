@@ -4,6 +4,7 @@ type FormFieldProps = {
   placeholder?: string;
   value?: string;
   variant?: "default" | "mono";
+  borderColor?: string;
 };
 
 export default function FormField({
@@ -12,6 +13,7 @@ export default function FormField({
   placeholder,
   value,
   variant = "default",
+  borderColor,
 }: FormFieldProps) {
   return (
     <div className="mb-[18px]">
@@ -23,6 +25,7 @@ export default function FormField({
         value={value}
         placeholder={placeholder}
         readOnly
+        style={borderColor ? { borderColor } : undefined}
         className={`w-full py-[14px] px-4 rounded-[14px] border-[1.5px] border-[#EADFD0] bg-white text-[15px] text-text-primary ${
           variant === "mono"
             ? "font-heading text-[18px] tracking-[3px] font-bold"

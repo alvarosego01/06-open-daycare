@@ -1,4 +1,8 @@
-export default function AuthLayout({ children }: LayoutProps<"/(auth)">) {
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="min-h-screen bg-[#FBF4EC]">
       {children}
