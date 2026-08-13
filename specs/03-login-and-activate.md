@@ -1,6 +1,6 @@
 # SPEC 03 — Login and activate account pages
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 01
 > **Date:** 2026-08-13
 > **Objective:** Implement the login page at `/login` and account activation page at `/activate` as static visual replicas of the reference mockups, using reusable form components and an auth route group with no Sidebar.
