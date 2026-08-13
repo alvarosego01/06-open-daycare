@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
 type DialogProps = {
   open: boolean;
@@ -9,18 +9,24 @@ type DialogProps = {
 };
 
 export default function Dialog({ open, onClose, children }: DialogProps) {
-  const [visible, setVisible] = useState(open);
-  const [animating, setAnimating] = useState(false);
+  const [mounted, setMounted] = useState(open);
+  const [animating, setAnimating] = useState(open);
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (open) {
-      setVisible(true);
-      requestAnimationFrame(() => setAnimating(true));
-    } else if (visible) {
-      setAnimating(false);
-      const timeout = setTimeout(() => setVisible(false), 200);
-      return () => clearTimeout(timeout);
+      const mountId = requestAnimationFrame(() => {
+        setMounted(true);
+        requestAnimationFrame(() => setAnimating(true));
+      });
+      return () => cancelAnimationFrame(mountId);
+    } else {
+      const fadeId = requestAnimationFrame(() => setAnimating(false));
+      const unmountId = setTimeout(() => setMounted(false), 200);
+      return () => {
+        cancelAnimationFrame(fadeId);
+        clearTimeout(unmountId);
+      };
     }
   }, [open]);
 
@@ -44,13 +50,17 @@ export default function Dialog({ open, onClose, children }: DialogProps) {
     };
   }, [open]);
 
-  useEffect(() => {
+  const focusDialog = useCallback(() => {
     if (open && dialogRef.current) {
       dialogRef.current.focus();
     }
   }, [open]);
 
-  if (!visible) return null;
+  useEffect(() => {
+    focusDialog();
+  }, [focusDialog]);
+
+  if (!mounted) return null;
 
   return (
     <div
