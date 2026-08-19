@@ -3,15 +3,99 @@
 import { useState } from "react";
 import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
-import { kids } from "@/data/kids";
-import AddKidDialog from "@/components/AddKidDialog";
+import { kids as initialKids, type Kid } from "@/data/kids";
+import AddKidDialog, { type AddKidFormData } from "@/components/AddKidDialog";
+
+const AVATAR_COLORS = [
+  { bg: "#A9D9E8", text: "#1F7A93" },
+  { bg: "#F4B8CC", text: "#C44A7A" },
+  { bg: "#B9DEC4", text: "#3E8B62" },
+  { bg: "#F4DC8E", text: "#9A7B1E" },
+  { bg: "#C9B6E8", text: "#7B5FC0" },
+];
+
+const ROOM_LABELS: Record<string, string> = {
+  soles: "Soles",
+  luna: "Luna",
+  estrellas: "Estrellas",
+};
+
+const MONTHS_SHORT = [
+  "ene", "feb", "mar", "abr", "may", "jun",
+  "jul", "ago", "sep", "oct", "nov", "dic",
+];
+
+function parseBirthDate(input: string): { age: string; birthDate: string } {
+  const match = input.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!match) return { age: "—", birthDate: input };
+
+  const day = parseInt(match[1], 10);
+  const month = parseInt(match[2], 10);
+  const year = parseInt(match[3], 10);
+
+  const now = new Date();
+  let age = now.getFullYear() - year;
+  const monthDiff = now.getMonth() + 1 - month;
+  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < day)) age--;
+
+  const monthLabel = MONTHS_SHORT[month - 1] ?? "—";
+  return {
+    age: `${age} años`,
+    birthDate: `${day} ${monthLabel} ${year}`,
+  };
+}
+
+function buildKidFromForm(data: AddKidFormData, index: number): Kid {
+  const colorSet = AVATAR_COLORS[index % AVATAR_COLORS.length];
+  const { age, birthDate } = parseBirthDate(data.fecha);
+  const slug = data.nombre
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+  const badges: Kid["badges"] = [];
+  if (data.alergias.trim()) {
+    const tags = data.alergias.split(",").map((t) => t.trim()).filter(Boolean);
+    for (const tag of tags) {
+      badges.push({
+        label: tag.toUpperCase(),
+        bgColor: "#FBD8CC",
+        textColor: "#D9684A",
+      });
+    }
+  }
+
+  return {
+    id: `${slug}-${Date.now()}`,
+    name: data.nombre,
+    initial: data.nombre.charAt(0).toUpperCase(),
+    avatarBgColor: colorSet.bg,
+    avatarTextColor: colorSet.text,
+    age,
+    parentCount: 0,
+    badges,
+    room: ROOM_LABELS[data.sala] ?? data.sala,
+    birthDate,
+    enrollmentDate: MONTHS_SHORT[new Date().getMonth()] + " " + new Date().getFullYear(),
+    allergyNotes: data.notas.trim() || null,
+    parents: [],
+  };
+}
 
 export default function KidsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [kids, setKids] = useState<Kid[]>(initialKids);
+
+  const handleAddKid = (data: AddKidFormData) => {
+    setKids((prev) => [...prev, buildKidFromForm(data, prev.length)]);
+    setDialogOpen(false);
+  };
 
   return (
     <>
-      <AddKidDialog open={dialogOpen} onClose={() => setDialogOpen(false)} />
+      <AddKidDialog open={dialogOpen} onClose={() => setDialogOpen(false)} onSave={handleAddKid} />
       <div className="flex min-h-screen bg-cream">
         <Sidebar activeItem="kids" />
 

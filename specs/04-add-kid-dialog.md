@@ -123,28 +123,28 @@ Conventions:
 
 ## Acceptance criteria
 
-- [ ] `/kids` loads without errors
-- [ ] Clicking "+ Agregar niño" button opens the modal dialog
-- [ ] Dialog matches reference visual: header layout (Cancelar/Agregar niño/Guardar), field labels, input styling, spacing, colors
-- [ ] FECHA DE NACIMIENTO and SALA are side-by-side in a row with 14px gap
-- [ ] SALA field is a select with options: Soles, Luna, Estrellas (with chevron icon)
-- [ ] NOTAS MÉDICAS is a textarea with min-height 90px and resize vertical
-- [ ] "Cancelar" closes the dialog and resets all field values
-- [ ] "Guardar" validates required fields: nombre completo, fecha de nacimiento, sala
-- [ ] Empty required fields show red border (`#D9583C`) when "Guardar" is clicked
-- [ ] "Guardar" does NOT close the dialog
-- [ ] "Guardar" does NOT persist any data
-- [ ] Desktop (md+): dialog is a centered card (max-width 520px) with backdrop (black 40% opacity + blur)
-- [ ] Mobile (< md): dialog is full-screen sheet
-- [ ] Fade-in animation on dialog open (opacity + subtle scale)
-- [ ] Fade-out animation on dialog close
-- [ ] Escape key closes the dialog
-- [ ] Backdrop click closes the dialog
-- [ ] Existing `FormField` usage in login/activate pages is unchanged (backward compatible)
-- [ ] No TypeScript errors (`npx tsc --noEmit` passes)
-- [ ] No lint errors in application code
-- [ ] Fredoka for dialog title, Nunito for body text
-- [ ] No horizontal scroll on any viewport
+- [x] `/kids` loads without errors
+- [x] Clicking "+ Agregar niño" button opens the modal dialog
+- [x] Dialog matches reference visual: header layout (Cancelar/Agregar niño/Guardar), field labels, input styling, spacing, colors
+- [x] FECHA DE NACIMIENTO and SALA are side-by-side in a row with 14px gap
+- [x] SALA field is a select with options: Soles, Luna, Estrellas (with chevron icon)
+- [x] NOTAS MÉDICAS is a textarea with min-height 90px and resize vertical
+- [x] "Cancelar" closes the dialog and resets all field values
+- [x] "Guardar" validates required fields: nombre completo, fecha de nacimiento, sala
+- [x] Empty required fields show red border (`#D9583C`) when "Guardar" is clicked
+- [x] "Guardar" does NOT close the dialog
+- [x] "Guardar" does NOT persist any data
+- [x] Desktop (md+): dialog is a centered card (max-width 520px) with backdrop (black 40% opacity + blur)
+- [x] Mobile (< md): dialog is full-screen sheet
+- [x] Fade-in animation on dialog open (opacity + subtle scale)
+- [x] Fade-out animation on dialog close
+- [x] Escape key closes the dialog
+- [x] Backdrop click closes the dialog
+- [x] Existing `FormField` usage in login/activate pages is unchanged (backward compatible)
+- [x] No TypeScript errors (`npx tsc --noEmit` passes)
+- [x] No lint errors in application code
+- [x] Fredoka for dialog title, Nunito for body text
+- [x] No horizontal scroll on any viewport
 
 ## Decisions
 

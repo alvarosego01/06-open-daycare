@@ -4,9 +4,18 @@ import { useState, useCallback } from "react";
 import Dialog from "@/components/Dialog";
 import FormField from "@/components/ui/FormField";
 
+export type AddKidFormData = {
+  nombre: string;
+  fecha: string;
+  sala: string;
+  alergias: string;
+  notas: string;
+};
+
 type AddKidDialogProps = {
   open: boolean;
   onClose: () => void;
+  onSave?: (data: AddKidFormData) => void;
 };
 
 const ROOM_OPTIONS = [
@@ -31,7 +40,7 @@ type FormErrors = {
 
 const emptyErrors: FormErrors = { nombre: false, fecha: false, sala: false };
 
-export default function AddKidDialog({ open, onClose }: AddKidDialogProps) {
+export default function AddKidDialog({ open, onClose, onSave }: AddKidDialogProps) {
   const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState(emptyErrors);
 
@@ -47,6 +56,10 @@ export default function AddKidDialog({ open, onClose }: AddKidDialogProps) {
       sala: form.sala === "",
     };
     setErrors(nextErrors);
+
+    if (nextErrors.nombre || nextErrors.fecha || nextErrors.sala) return;
+
+    onSave?.(form);
   };
 
   const handleCancelar = useCallback(() => {
