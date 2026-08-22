@@ -11,6 +11,12 @@
       "enabled": true
     }
   },
+  "permission": {
+    "external_directory": {
+      "/tmp/**": "allow"
+    },
+    "bash": "allow"
+  },
   "command": {
     "spec": {
       "description": "Crea especificaciones de pantallas y funcionalidades",

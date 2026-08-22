@@ -1,7 +1,7 @@
 ---
 description: Verifies spec acceptance criteria using code analysis, Playwright screenshots, and Context7 docs
 mode: all
-model: opencode-go/qwen3.6-plus
+model: opencode-go/mimo-v2.5
 temperature: 0.1
 permission:
   read: allow
