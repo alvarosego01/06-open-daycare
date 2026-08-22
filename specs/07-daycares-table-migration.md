@@ -1,6 +1,6 @@
 # SPEC 07 — Crear tabla daycares con patrón de migraciones
 
-> **Status:** Draft  
+> **Status:** Approved  
 > **Depends on:** (none)  
 > **Date:** 2026-08-22  
 > **Objective:** Crear la tabla `daycares` en Supabase siguiendo el patrón de migraciones imperativas con Supabase CLI, incluyendo setup inicial de la herramienta, seed data de prueba y verificación manual en la plataforma.
