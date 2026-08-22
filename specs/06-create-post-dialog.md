@@ -1,6 +1,6 @@
 # SPEC 06 — Crear publicacion dialog
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 04, SPEC 05
 > **Date:** 2026-08-22
 > **Objective:** Implementar el dialogo "Nueva publicacion" en el feed que permita seleccionar destinatario (PARA), tipo de post (TIPO), descripcion y fotos mock, con persistencia en el array de posts y triggers desde el Sidebar y el composer del feed.

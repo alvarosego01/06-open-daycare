@@ -6,9 +6,15 @@ type DialogProps = {
   open: boolean;
   onClose: () => void;
   children: ReactNode;
+  maxWidth?: string;
 };
 
-export default function Dialog({ open, onClose, children }: DialogProps) {
+export default function Dialog({
+  open,
+  onClose,
+  children,
+  maxWidth = "md:max-w-[520px]",
+}: DialogProps) {
   const [mounted, setMounted] = useState(open);
   const [animating, setAnimating] = useState(open);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -79,7 +85,7 @@ export default function Dialog({ open, onClose, children }: DialogProps) {
         tabIndex={-1}
         className={`relative z-10 w-full transition-all duration-200 ease-out
           max-md:fixed max-md:inset-0 max-md:max-w-none max-md:rounded-none
-          md:max-w-[520px] md:rounded-[24px] md:border md:border-border
+          ${maxWidth} md:rounded-[24px] md:border md:border-border
           ${animating ? "opacity-100 scale-100" : "opacity-0 scale-[0.97]"}
         `}
         style={{

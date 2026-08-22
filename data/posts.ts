@@ -1,46 +1,52 @@
-type PostAuthor = {
+export type PostAuthor = {
   name: string;
   initial: string;
   bgColor: string;
   textColor: string;
 };
 
-type PostBase = {
+export type PostCategory =
+  | "comida"
+  | "siesta"
+  | "actividad"
+  | "logro"
+  | "animo"
+  | "foto"
+  | "anuncio";
+
+export type Post = {
   id: string;
+  category: PostCategory;
   author: PostAuthor;
   timestamp: string;
   publishedBy: string;
   recipient: string;
   content: string;
+  photos?: string[];
   likes: number;
   comments: number;
 };
 
-type PostAchievement = PostBase & {
-  type: "achievement";
+type PostCategoryMeta = {
+  label: string;
+  bg: string;
+  text: string;
 };
 
-type PostActivity = PostBase & {
-  type: "activity";
-  photoPlaceholder?: string;
+export const POST_CATEGORY_META: Record<PostCategory, PostCategoryMeta> = {
+  comida: { label: "Comida", bg: "#9A7B1E", text: "#FFFFFF" },
+  siesta: { label: "Siesta", bg: "#E7DCF6", text: "#7B5FC0" },
+  actividad: { label: "Actividad", bg: "#2E89A6", text: "#FFFFFF" },
+  logro: { label: "Logro", bg: "#CFEBD8", text: "#3E9B6C" },
+  animo: { label: "Ánimo", bg: "#F9D2DE", text: "#C56486" },
+  foto: { label: "Foto", bg: "#FBD8CC", text: "#D9684A" },
+  anuncio: { label: "Anuncio", bg: "#CCD8F4", text: "#4E72C8" },
 };
-
-type PostAnnouncement = Omit<PostBase, "author"> & {
-  type: "announcement";
-  author: {
-    name: string;
-    icon: "megaphone";
-    bgColor: string;
-    textColor: string;
-  };
-};
-
-export type Post = PostAchievement | PostActivity | PostAnnouncement;
 
 export const posts: Post[] = [
   {
     id: "1",
-    type: "achievement",
+    category: "logro",
     author: {
       name: "Mateo",
       initial: "M",
@@ -57,7 +63,7 @@ export const posts: Post[] = [
   },
   {
     id: "2",
-    type: "activity",
+    category: "actividad",
     author: {
       name: "Mateo",
       initial: "M",
@@ -69,16 +75,16 @@ export const posts: Post[] = [
     recipient: "familia de Mateo",
     content:
       "Pintamos con témperas esta mañana. Mateo eligió el azul para todo y se concentró un montón mezclando colores.",
-    photoPlaceholder: "Foto · pintando con témperas",
+    photos: ["/photos/painting.svg"],
     likes: 3,
     comments: 1,
   },
   {
     id: "3",
-    type: "announcement",
+    category: "anuncio",
     author: {
       name: "Anuncio general",
-      icon: "megaphone",
+      initial: "A",
       bgColor: "#CCD8F4",
       textColor: "#4E72C8",
     },

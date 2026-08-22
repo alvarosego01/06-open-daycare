@@ -1,6 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import {
+  forwardRef,
+  useState,
+  useImperativeHandle,
+} from "react";
+import CreatePostDialog from "@/components/CreatePostDialog";
+
+export type SidebarHandle = {
+  openCreatePost: () => void;
+};
 
 type ActiveItem = "feed" | "kids" | "notices" | "account";
 
@@ -8,8 +17,16 @@ type SidebarProps = {
   activeItem?: ActiveItem;
 };
 
-export default function Sidebar({ activeItem = "feed" }: SidebarProps) {
+const Sidebar = forwardRef<SidebarHandle, SidebarProps>(function Sidebar(
+  { activeItem = "feed" },
+  ref
+) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [createPostOpen, setCreatePostOpen] = useState(false);
+
+  useImperativeHandle(ref, () => ({
+    openCreatePost: () => setCreatePostOpen(true),
+  }));
 
   const navItems = [
     {
@@ -123,8 +140,9 @@ export default function Sidebar({ activeItem = "feed" }: SidebarProps) {
         </div>
       </a>
 
-      <a
-        href="#"
+      <button
+        type="button"
+        onClick={() => setCreatePostOpen(true)}
         className="flex items-center justify-center gap-2 w-full py-3 rounded-[14px] bg-gradient-to-b from-[#F4977E] to-[#EE8164] text-white font-extrabold text-[14.5px] shadow-[0_8px_18px_-8px_rgba(238,129,100,0.75)] mb-[18px]"
       >
         <svg
@@ -140,7 +158,7 @@ export default function Sidebar({ activeItem = "feed" }: SidebarProps) {
           <path d="M12 5v14M5 12h14" />
         </svg>
         Nueva publicación
-      </a>
+      </button>
 
       <nav className="flex flex-col gap-1 flex-1">
         {navItems.map((item) => (
@@ -233,6 +251,13 @@ export default function Sidebar({ activeItem = "feed" }: SidebarProps) {
       >
         {sidebarContent}
       </aside>
+
+      <CreatePostDialog
+        open={createPostOpen}
+        onClose={() => setCreatePostOpen(false)}
+      />
     </>
   );
-}
+});
+
+export default Sidebar;
