@@ -62,19 +62,25 @@ Notas:
 
 ## Acceptance criteria
 
-- [ ] Existe la carpeta `migrations/` en la raiz del proyecto
-- [ ] Existe `migrations/001_create_daycares.sql` con el DDL de la tabla `daycares`
-- [ ] La migracion `001_create_daycares` se aplico sin errores via `supabase_apply_migration`
-- [ ] La tabla `daycares` existe en Supabase con las columnas: `id` (uuid, PK), `name` (text), `created_at` (timestamptz)
-- [ ] `id` tiene default `gen_random_uuid()`
-- [ ] `created_at` tiene default `now()`
-- [ ] RLS esta habilitado en la tabla `daycares` (sin politicas definidas)
-- [ ] Existe `migrations/README.md` como archivo de control de migraciones
-- [ ] `migrations/README.md` documenta la migracion `001_create_daycares` con numero, nombre, descripcion y estado `applied`
-- [ ] No se crearon enums en este spec
-- [ ] No se crearon otras tablas en este spec
+- [x] Existe la carpeta `migrations/` en la raiz del proyecto
+- [x] Existe `migrations/001_create_daycares.sql` con el DDL de la tabla `daycares`
+- [x] La migracion `001_create_daycares` se aplico sin errores via `supabase_apply_migration`
+- [x] La tabla `daycares` existe en Supabase con las columnas: `id` (uuid, PK), `name` (text), `created_at` (timestamptz)
+- [x] `id` tiene default `gen_random_uuid()`
+- [x] `created_at` tiene default `now()`
+- [x] RLS esta habilitado en la tabla `daycares` (sin politicas definidas)
+- [x] Existe `migrations/README.md` como archivo de control de migraciones
+- [x] `migrations/README.md` documenta la migracion `001_create_daycares` con numero, nombre, descripcion y estado `applied`
+- [x] No se crearon enums en este spec
+- [x] No se crearon otras tablas en este spec
 - [ ] `pnpm run lint` pasa sin errores
-- [ ] `npx tsc --noEmit` pasa sin errores
+- [x] `npx tsc --noEmit` pasa sin errores
+
+## Verification notes (auto-generated)
+
+- **Criterion 12**: `pnpm run lint` no pasa sin errores (2 errores, 8 warnings)
+  - Evidence: Los errores provienen de `references/pantallas/support.js` (lineas 196, 1089: `ReactDOM.render is deprecated`, `no-assign-module-variable`). Son errores pre-existentes en archivos de referencia/mockup, NO causados por este spec (que solo crea archivos SQL y README).
+  - Suggested fix: Estos errores son pre-existentes en `references/pantallas/support.js` y no estan relacionados con este spec. Si se requiere que lint pase limpio, se debe corregir ese archivo de referencia por separado.
 
 ## Decisions
 
