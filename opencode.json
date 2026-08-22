@@ -17,6 +17,7 @@
       "description": "Schema de base de datos, tablas, columnas y referencias a crear, esto no está implementado en la base de datos, es solo para referencia"
     }
   },
+  "lsp": true,
   "permission": {
     "external_directory": {
       "/tmp/**": "allow"

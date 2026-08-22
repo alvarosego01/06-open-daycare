@@ -39,11 +39,25 @@ When implementing UI, match colors, spacing, and typography from the mockups. Th
 
 - **Playwright** — screenshots and browser automation output go in `.playwright-mcp/`
 - **Context7** — use for up-to-date framework/library documentation
+- **Supabase** — database, auth, edge functions, storage, realtime. Use `supabase` skill before any Supabase task
+
+## Supabase
+
+- **Project type**: Next.js 16 + React 19 with App Router
+- **Client library**: `@supabase/supabase-js` for browser, `@supabase/ssr` for server components
+- **Environment variables**: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (browser), `SUPABASE_SERVICE_ROLE_KEY` (server-only, never expose to client)
+- **Security**: Always enable RLS on public tables. Never use `user_metadata` in auth decisions. Use `app_metadata` for authorization data
+- **Schema changes**: Use `supabase db query` for iteration, then `supabase db pull` to generate migrations. Never use `apply_migration` for local development
+- **Best practices**: Load `supabase-postgres-best-practices` skill before writing SQL, designing schemas, or creating indexes
 
 ## Spec driven development
 - /spec usaremos esta skill para crear las especificaciones
 - /spec-impl usaremos esta skill para implementar las especificaciones creadas previamente con /spec
 - /spec-rev usaremos este agente para verificar los criterios de aceptación del spec
+
+## Supabase skills
+- **supabase** — skill principal para cualquier tarea de Supabase (auth, RLS, edge functions, storage, schema, debugging)
+- **supabase-postgres-best-practices** — guía de mejores prácticas de Postgres para schema design, queries, indexes, RLS y performance
 
 ## WARNING NOT DO!
 - Está prohibido el uso de npm bajo ningún concepto, en su lugar usar ***pnpm***
