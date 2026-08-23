@@ -1,6 +1,6 @@
 # SPEC 08 — Tabla users, enums y trigger de auth
 
-> **Status:** Draft
+> **Status:** Approved
 > **Depends on:** SPEC 07
 > **Date:** 2026-08-22
 > **Objective:** Crear los enums `user_role` y `user_status`, la tabla `users` vinculada a `auth.users` via FK, el trigger de auto-creacion de perfil, politicas RLS basicas, y un usuario staff de seed para pruebas.
