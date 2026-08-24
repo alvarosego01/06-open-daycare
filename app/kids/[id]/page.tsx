@@ -1,20 +1,70 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import Sidebar from "@/components/Sidebar";
-import ParentsSection from "@/components/ParentsSection";
-import { kids } from "@/data/kids";
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import Sidebar from '@/components/Sidebar';
+import ParentsSection from '@/components/ParentsSection';
+import { getChildById } from '../actions';
+import ArchiveButton from './ArchiveButton';
+import type { Parent } from '@/data/kids';
 
 type KidProfilePageProps = {
   params: Promise<{ id: string }>;
 };
 
+const MONTHS_SHORT = [
+  'ene', 'feb', 'mar', 'abr', 'may', 'jun',
+  'jul', 'ago', 'sep', 'oct', 'nov', 'dic',
+];
+
+function formatBirthDate(birthDate: string): string {
+  const birth = new Date(birthDate);
+  const day = birth.getDate();
+  const month = MONTHS_SHORT[birth.getMonth()];
+  const year = birth.getFullYear();
+  return `${day} ${month} ${year}`;
+}
+
+function formatEnrollmentDate(enrolledAt: string): string {
+  const enrolled = new Date(enrolledAt);
+  const month = MONTHS_SHORT[enrolled.getMonth()];
+  const year = enrolled.getFullYear();
+  return `${month} ${year}`;
+}
+
+function calculateAge(birthDate: string): string {
+  const birth = new Date(birthDate);
+  const now = new Date();
+  let age = now.getFullYear() - birth.getFullYear();
+  const monthDiff = now.getMonth() - birth.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birth.getDate())) {
+    age--;
+  }
+  return `${age} años`;
+}
+
+const AVATAR_COLORS = [
+  { bg: '#A9D9E8', text: '#1F7A93' },
+  { bg: '#F4B8CC', text: '#C44A7A' },
+  { bg: '#B9DEC4', text: '#3E8B62' },
+  { bg: '#F4DC8E', text: '#9A7B1E' },
+  { bg: '#C9B6E8', text: '#7B5FC0' },
+];
+
 export default async function KidProfilePage({ params }: KidProfilePageProps) {
   const { id } = await params;
-  const kid = kids.find((k) => k.id === id);
+  const child = await getChildById(id);
 
-  if (!kid) {
+  if (!child) {
     notFound();
   }
+
+  const initial = child.full_name.charAt(0).toUpperCase();
+  const colorIndex = child.full_name.charCodeAt(0) % AVATAR_COLORS.length;
+  const colorSet = AVATAR_COLORS[colorIndex];
+  const age = calculateAge(child.birth_date);
+  const birthDateFormatted = formatBirthDate(child.birth_date);
+  const enrollmentDateFormatted = formatEnrollmentDate(child.enrolled_at);
+
+  const mockParents: Parent[] = [];
 
   return (
     <div className="flex min-h-screen bg-cream">
@@ -47,29 +97,24 @@ export default async function KidProfilePage({ params }: KidProfilePageProps) {
                 <div
                   className="w-[84px] h-[84px] rounded-full flex items-center justify-center flex-none font-heading font-semibold text-[34px]"
                   style={{
-                    backgroundColor: kid.avatarBgColor,
-                    color: kid.avatarTextColor,
+                    backgroundColor: colorSet.bg,
+                    color: colorSet.text,
                   }}
                 >
-                  {kid.initial}
+                  {initial}
                 </div>
                 <div className="flex-1">
                   <h1 className="font-heading font-semibold text-[28px] m-0 text-text-primary">
-                    {kid.name}
+                    {child.full_name}
                   </h1>
                   <p className="m-[3px]_0_0 text-[#94887B] text-[15px]">
-                    {kid.age} · Sala {kid.room}
+                    {age} · {child.room_name}
                   </p>
                 </div>
-                <a
-                  href="#"
-                  className="border-[1.5px] border-border bg-card text-[#6E6359] font-bold text-[14px] py-[9px] px-4 rounded-xl"
-                >
-                  Editar
-                </a>
+                <ArchiveButton childId={child.id} childName={child.full_name} />
               </div>
 
-              {kid.allergyNotes && (
+              {child.medical_notes && (
                 <div className="flex gap-3.5 bg-[#FBDAD6] rounded-2xl p-4 px-[18px]">
                   <div className="w-10 h-10 rounded-[11px] bg-[#F4A8A0] flex items-center justify-center flex-none">
                     <svg
@@ -88,10 +133,38 @@ export default async function KidProfilePage({ params }: KidProfilePageProps) {
                   </div>
                   <div>
                     <div className="font-extrabold text-[#C5413A] text-[15px] mb-0.5">
-                      Alergias y notas
+                      Notas médicas
                     </div>
                     <div className="text-[#B25249] text-[14.5px] leading-relaxed">
-                      {kid.allergyNotes}
+                      {child.medical_notes}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {child.allergy_tags.length > 0 && (
+                <div className="flex gap-3.5 bg-[#FBDAD6] rounded-2xl p-4 px-[18px]">
+                  <div className="w-10 h-10 rounded-[11px] bg-[#F4A8A0] flex items-center justify-center flex-none">
+                    <svg
+                      width="22"
+                      height="22"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+                      <path d="M12 9v4M12 17h.01" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-extrabold text-[#C5413A] text-[15px] mb-0.5">
+                      Alergias
+                    </div>
+                    <div className="text-[#B25249] text-[14.5px] leading-relaxed">
+                      {child.allergy_tags.map((tag: string) => tag.toUpperCase()).join(', ')}
                     </div>
                   </div>
                 </div>
@@ -103,19 +176,19 @@ export default async function KidProfilePage({ params }: KidProfilePageProps) {
                     Fecha de nacimiento
                   </span>
                   <span className="font-extrabold text-text-primary text-[14.5px]">
-                    {kid.birthDate}
+                    {birthDateFormatted}
                   </span>
                 </div>
                 <div className="flex justify-between py-[15px] px-[18px] border-b border-[#F0E6D8]">
                   <span className="text-[#94887B] text-[14.5px]">Sala</span>
                   <span className="font-extrabold text-text-primary text-[14.5px]">
-                    {kid.room}
+                    {child.room_name}
                   </span>
                 </div>
                 <div className="flex justify-between py-[15px] px-[18px]">
                   <span className="text-[#94887B] text-[14.5px]">Ingreso</span>
                   <span className="font-extrabold text-text-primary text-[14.5px]">
-                    {kid.enrollmentDate}
+                    {enrollmentDateFormatted}
                   </span>
                 </div>
               </div>
@@ -142,7 +215,7 @@ export default async function KidProfilePage({ params }: KidProfilePageProps) {
                 Resumen del día
               </a>
 
-              <ParentsSection kidId={kid.id} initialParents={kid.parents} />
+              <ParentsSection kidId={child.id} initialParents={mockParents} />
             </div>
           </div>
         </div>
