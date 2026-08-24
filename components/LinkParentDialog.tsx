@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Dialog from "@/components/Dialog";
 import FormField from "@/components/ui/FormField";
+import { sendInvitation } from "@/app/actions/invitations";
 
 const PARENT_AVATAR_COLORS = [
   "#C9B6E8", // purple
@@ -59,6 +60,7 @@ export default function LinkParentDialog({
   open,
   onClose,
   kidName,
+  kidId,
   invitationCode,
   onParentAdded,
 }: LinkParentDialogProps) {
@@ -68,10 +70,28 @@ export default function LinkParentDialog({
     email: false,
     relationship: false,
   });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const resetForm = () => {
     setForm(emptyForm);
     setErrors({ name: false, email: false, relationship: false });
+    setSubmitError(null);
+  };
+
+  const mapRelationship = (
+    label: string
+  ): "father" | "mother" | "guardian" => {
+    switch (label) {
+      case "Mamá":
+        return "mother";
+      case "Papá":
+        return "father";
+      case "Tutor/a":
+        return "guardian";
+      default:
+        return "guardian";
+    }
   };
 
   const handleClose = () => {
@@ -79,7 +99,7 @@ export default function LinkParentDialog({
     onClose();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const nextErrors = {
       name: form.name.trim() === "",
       email: form.email.trim() === "",
@@ -88,6 +108,24 @@ export default function LinkParentDialog({
     setErrors(nextErrors);
 
     if (nextErrors.name || nextErrors.email || nextErrors.relationship) return;
+
+    setSubmitting(true);
+    setSubmitError(null);
+
+    const result = await sendInvitation({
+      childId: kidId,
+      fullName: form.name.trim(),
+      email: form.email.trim(),
+      relationship: mapRelationship(form.relationship as string),
+      code: invitationCode,
+    });
+
+    setSubmitting(false);
+
+    if (result.error) {
+      setSubmitError(result.error);
+      return;
+    }
 
     const newParent = {
       id: slugify(form.name),
@@ -248,27 +286,53 @@ export default function LinkParentDialog({
         <button
           type="button"
           onClick={handleSubmit}
+          disabled={submitting}
           className="flex items-center justify-center gap-[9px] w-full py-[14px] rounded-[14px] text-white font-extrabold text-[15.5px]"
           style={{
-            background: "linear-gradient(180deg,#F4977E,#EE8164)",
+            background: submitting
+              ? "linear-gradient(180deg,#D4B8A8,#C4A898)"
+              : "linear-gradient(180deg,#F4977E,#EE8164)",
             boxShadow: "0 10px 22px -8px rgba(238,129,100,.7)",
+            opacity: submitting ? 0.7 : 1,
+            cursor: submitting ? "not-allowed" : "pointer",
           }}
         >
-          <svg
-            width="19"
-            height="19"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#fff"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="m22 2-7 20-4-9-9-4z" />
-            <path d="M22 2 11 13" />
-          </svg>
-          Enviar invitación
+          {submitting ? (
+            <svg
+              className="animate-spin"
+              width="19"
+              height="19"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#fff"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+            </svg>
+          ) : (
+            <svg
+              width="19"
+              height="19"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#fff"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="m22 2-7 20-4-9-9-4z" />
+              <path d="M22 2 11 13" />
+            </svg>
+          )}
+          {submitting ? "Enviando..." : "Enviar invitación"}
         </button>
+        {submitError && (
+          <p className="mt-2 text-center text-[13px] text-[#D9583C] font-medium">
+            {submitError}
+          </p>
+        )}
       </div>
     </Dialog>
   );
