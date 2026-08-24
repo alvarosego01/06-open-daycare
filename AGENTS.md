@@ -44,8 +44,13 @@ When implementing UI, match colors, spacing, and typography from the mockups. Th
 ## Supabase
 
 - **Project type**: Next.js 16 + React 19 with App Router
-- **Client library**: `@supabase/supabase-js` for browser, `@supabase/ssr` for server components
-- **Environment variables**: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (browser), `SUPABASE_SERVICE_ROLE_KEY` (server-only, never expose to client)
+- **Packages**: `@supabase/supabase-js` and `@supabase/ssr` (installed via pnpm)
+- **Client helpers**:
+  - `utils/supabase/server.ts` — server-side client (Server Components, Route Handlers). Requires `cookies()` from `next/headers` passed as argument
+  - `utils/supabase/client.ts` — browser client (Client Components with `"use client"`)
+  - `utils/supabase/middleware.ts` — middleware client for session refresh
+- **Middleware**: `middleware.ts` at project root refreshes Supabase sessions automatically on every request
+- **Environment variables** (in `.env.local`): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 - **Security**: Always enable RLS on public tables. Never use `user_metadata` in auth decisions. Use `app_metadata` for authorization data
 - **Schema changes**: Use `supabase db query` for iteration, then `supabase db pull` to generate migrations. Never use `apply_migration` for local development
 - **Best practices**: Load `supabase-postgres-best-practices` skill before writing SQL, designing schemas, or creating indexes
