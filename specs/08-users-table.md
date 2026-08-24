@@ -1,6 +1,6 @@
 # SPEC 08 — Tabla users, enums y trigger de auth
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 07
 > **Date:** 2026-08-22
 > **Objective:** Crear los enums `user_role` y `user_status`, la tabla `users` vinculada a `auth.users` via FK, el trigger de auto-creacion de perfil, politicas RLS basicas, y un usuario staff de seed para pruebas.
@@ -174,24 +174,24 @@ Notas:
 
 ## Acceptance criteria
 
-- [ ] Existe `migrations/002_create_users.sql` con el DDL completo
-- [ ] La migracion `002_create_users` se aplico sin errores via `supabase_apply_migration`
-- [ ] El enum `user_role` existe con valores `staff`, `parent`, `admin`
-- [ ] El enum `user_status` existe con valores `pending`, `active`
-- [ ] La tabla `users` existe con las columnas: `id` (uuid, PK, FK a auth.users), `daycare_id` (uuid, FK a daycares), `role` (user_role), `status` (user_status, default active), `full_name` (text), `avatar_url` (text, nullable), `notify_on_post` (boolean, default true), `daily_summary_enabled` (boolean, default true), `created_at` (timestamptz), `updated_at` (timestamptz)
-- [ ] `id` tiene FK a `auth.users(id)` con `ON DELETE CASCADE`
-- [ ] `daycare_id` tiene FK a `daycares(id)` con `ON DELETE CASCADE`
-- [ ] La funcion `handle_new_user()` existe y es `SECURITY DEFINER`
-- [ ] El trigger `on_auth_user_created` existe y se ejecuta `AFTER INSERT` en `auth.users`
-- [ ] RLS esta habilitado en la tabla `users`
-- [ ] Existe la politica "Users can read own profile" que permite a usuarios leer su propio perfil
-- [ ] Existe la politica "Staff can read users in same daycare" que permite a staff leer usuarios de su daycare
-- [ ] Existe la politica "Users can update own profile" que permite a usuarios actualizar su propio perfil
-- [ ] El usuario staff `alvarosego01@gmail.com` existe en `auth.users` con password `Abc12345@`
-- [ ] El usuario staff existe en `public.users` con rol `staff`, status `active`, full_name `Alvaro Segovia`, vinculado al daycare existente
-- [ ] Existe `migrations/README.md` actualizado con la migracion `002_create_users` documentada
-- [ ] `pnpm run lint` pasa sin errores (o los errores son pre-existentes y no relacionados con este spec)
-- [ ] `npx tsc --noEmit` pasa sin errores
+- [x] Existe `migrations/002_create_users.sql` con el DDL completo
+- [x] La migracion `002_create_users` se aplico sin errores via `supabase_apply_migration`
+- [x] El enum `user_role` existe con valores `staff`, `parent`, `admin`
+- [x] El enum `user_status` existe con valores `pending`, `active`
+- [x] La tabla `users` existe con las columnas: `id` (uuid, PK, FK a auth.users), `daycare_id` (uuid, FK a daycares), `role` (user_role), `status` (user_status, default active), `full_name` (text), `avatar_url` (text, nullable), `notify_on_post` (boolean, default true), `daily_summary_enabled` (boolean, default true), `created_at` (timestamptz), `updated_at` (timestamptz)
+- [x] `id` tiene FK a `auth.users(id)` con `ON DELETE CASCADE`
+- [x] `daycare_id` tiene FK a `daycares(id)` con `ON DELETE CASCADE`
+- [x] La funcion `handle_new_user()` existe y es `SECURITY DEFINER`
+- [x] El trigger `on_auth_user_created` existe y se ejecuta `AFTER INSERT` en `auth.users`
+- [x] RLS esta habilitado en la tabla `users`
+- [x] Existe la politica "Users can read own profile" que permite a usuarios leer su propio perfil
+- [x] Existe la politica "Staff can read users in same daycare" que permite a staff leer usuarios de su daycare
+- [x] Existe la politica "Users can update own profile" que permite a usuarios actualizar su propio perfil
+- [x] El usuario staff `alvarosego01@gmail.com` existe en `auth.users` con password `Abc12345@`
+- [x] El usuario staff existe en `public.users` con rol `staff`, status `active`, full_name `Alvaro Segovia`, vinculado al daycare existente
+- [x] Existe `migrations/README.md` actualizado con la migracion `002_create_users` documentada
+- [x] `pnpm run lint` pasa sin errores (o los errores son pre-existentes y no relacionados con este spec)
+- [x] `npx tsc --noEmit` pasa sin errores
 
 ## Decisions
 
