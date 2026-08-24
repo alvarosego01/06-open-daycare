@@ -1,8 +1,42 @@
+"use client";
+
+import { useState } from "react";
 import BrandHeroPanel from "@/components/auth/BrandHeroPanel";
 import FormField from "@/components/ui/FormField";
 import PrimaryButton from "@/components/ui/PrimaryButton";
+import { login } from "./actions";
 
 export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+
+    if (!emailRegex.test(email)) {
+      setError("Ingresa un email valido");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const formData = new FormData(e.currentTarget);
+      const result = await login(formData);
+      if (result?.error) {
+        setError(result.error);
+      }
+    } catch {
+      setError("Email o contrasena incorrectos");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="min-h-screen grid lg:grid-cols-[1.05fr_1fr]">
       <BrandHeroPanel />
@@ -16,20 +50,41 @@ export default function LoginPage() {
             Ingresá para ver el día de hoy.
           </p>
 
-          <FormField label="EMAIL" type="email" />
-          <FormField
-            label="CONTRASEÑA"
-            type="password"
-            placeholder="••••••••"
-          />
+          <form onSubmit={handleSubmit}>
+            <FormField
+              label="EMAIL"
+              type="email"
+              name="email"
+              value={email}
+              onChange={setEmail}
+              readOnly={false}
+            />
+            <FormField
+              label="CONTRASEÑA"
+              type="password"
+              name="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={setPassword}
+              readOnly={false}
+            />
 
-          <div className="text-right mb-5">
-            <span className="text-[#C5503A] text-[13.5px] font-bold cursor-pointer">
-              ¿Olvidaste tu contraseña?
-            </span>
-          </div>
+            <div className="text-right mb-5">
+              <span className="text-[#C5503A] text-[13.5px] font-bold cursor-pointer">
+                ¿Olvidaste tu contraseña?
+              </span>
+            </div>
 
-          <PrimaryButton>Iniciar sesión</PrimaryButton>
+            <PrimaryButton type="submit">
+              {loading ? "Iniciando sesión..." : "Iniciar sesión"}
+            </PrimaryButton>
+          </form>
+
+          {error && (
+            <p className="mt-4 text-center text-[14px] text-[#D9583C] font-semibold">
+              {error}
+            </p>
+          )}
 
           <p className="text-center mt-6 text-[#94887B] text-[14.5px]">
             ¿Te invitó la guardería?{" "}
