@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 type ActiveItem = "feed" | "kids" | "notices" | "account";
 
@@ -8,8 +10,35 @@ type SidebarProps = {
   activeItem?: ActiveItem;
 };
 
+function formatDisplayName(fullName: string): { name: string; initial: string } {
+  const parts = fullName.trim().split(/\s+/);
+  const firstName = parts[0] || "";
+  const lastInitial = parts.length > 1 ? parts[parts.length - 1][0] : "";
+  return {
+    name: `${firstName}${lastInitial ? ` ${lastInitial}.` : ""}`,
+    initial: firstName[0]?.toUpperCase() || "?",
+  };
+}
+
 export default function Sidebar({ activeItem = "feed" }: SidebarProps) {
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [displayName, setDisplayName] = useState("Usuario");
+  const [avatarInitial, setAvatarInitial] = useState("U");
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      const fullName =
+        user.user_metadata?.full_name ||
+        user.email?.split("@")[0] ||
+        "Usuario";
+      const { name, initial } = formatDisplayName(fullName);
+      setDisplayName(name);
+      setAvatarInitial(initial);
+    });
+  }, []);
 
   const navItems = [
     {
@@ -162,18 +191,23 @@ export default function Sidebar({ activeItem = "feed" }: SidebarProps) {
       <div className="border-t border-border pt-3.5 mt-2.5">
         <div className="flex items-center gap-[11px] px-2 py-1.5">
           <div className="w-[38px] h-[38px] rounded-full bg-[#F2937A] text-white font-heading font-semibold text-[16px] flex items-center justify-center flex-none">
-            C
+            {avatarInitial}
           </div>
           <div className="flex-1 min-w-0">
             <div className="font-extrabold text-[14px] text-text-primary">
-              Caro Giménez
+              {displayName}
             </div>
             <div className="text-[12px] text-[#A89A8B]">Maestra · Soles</div>
           </div>
-          <a
-            href="#"
+          <button
+            type="button"
             title="Cerrar sesión"
-            className="flex-none w-8 h-8 rounded-[10px] bg-cream text-[#94887B] flex items-center justify-center"
+            onClick={async () => {
+              const supabase = createClient();
+              await supabase.auth.signOut();
+              router.push("/login");
+            }}
+            className="flex-none w-8 h-8 rounded-[10px] bg-cream text-[#94887B] flex items-center justify-center cursor-pointer hover:bg-[#EDE0D0] transition-colors"
           >
             <svg
               width="16"
@@ -189,7 +223,7 @@ export default function Sidebar({ activeItem = "feed" }: SidebarProps) {
               <path d="M16 17l5-5-5-5" />
               <path d="M21 12H9" />
             </svg>
-          </a>
+          </button>
         </div>
       </div>
     </>

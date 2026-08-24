@@ -4,6 +4,7 @@ type FormFieldProps = {
   label: string;
   type?: string;
   placeholder?: string;
+  name?: string;
   value?: string;
   onChange?: (value: string) => void;
   variant?: "default" | "mono";
@@ -20,6 +21,7 @@ export default function FormField({
   label,
   type = "text",
   placeholder,
+  name,
   value,
   onChange,
   variant = "default",
@@ -52,6 +54,7 @@ export default function FormField({
       case "textarea":
         return (
           <textarea
+            name={name}
             value={value}
             onChange={handleChange}
             placeholder={placeholder}
@@ -69,6 +72,7 @@ export default function FormField({
         return (
           <div className="relative">
             <select
+              name={name}
               value={value}
               onChange={handleChange}
               disabled={readOnly}
@@ -102,6 +106,7 @@ export default function FormField({
       default:
         return (
           <input
+            name={name}
             type={type}
             value={value}
             onChange={handleChange}
