@@ -1,6 +1,6 @@
 # SPEC 11 — Vinculación padre-hijo: invitación por email y registro
 
-> **Status:** Draft
+> **Status:** Approved
 > **Depends on:** SPEC 05, SPEC 09, SPEC 10
 > **Date:** 2026-08-24
 > **Objective:** Crear la tabla `invitations` en Supabase, integrar Resend para enviar emails de invitación con un código, y conectar los flujos de envío de invitación (dialog "Vincular padre") y registro del padre (página `/activate`) a datos reales.
