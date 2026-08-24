@@ -16,7 +16,7 @@
   - Staff puede leer invitaciones de su daycare
   - El padre invitado puede leer su propia invitación aceptada (por `email` = `auth.jwt().email`)
 - Instalar el paquete `resend` via `pnpm`
-- Agregar variable de entorno `RESEND_API_KEY` en `.env.local`
+- La variable de entorno `RESEND_API_KEY` ya existe en `.env` (configurada previamente)
 - Crear módulo `utils/email/resend.ts` con el cliente Resend y la función `sendInvitationEmail()`
 - Crear Server Action `sendInvitation()` en `app/actions/invitations.ts`:
   - Recibe `childId`, `fullName`, `email`, `relationship`, `code`
@@ -158,7 +158,7 @@ Notas:
 
 1. **Instalar Resend.** Ejecutar `pnpm add resend`. Verificar que aparece en `dependencies` del `package.json`.
 
-2. **Configurar variable de entorno.** Agregar `RESEND_API_KEY=re_...` en `.env.local`. El valor lo provee el usuario desde su dashboard de Resend.
+2. **Verificar variable de entorno.** La variable `RESEND_API_KEY` ya existe en `.env` con el valor configurado. No es necesario agregarla.
 
 3. **Crear cliente Resend.** Crear `utils/email/resend.ts` con:
    - Instancia de `Resend` usando `process.env.RESEND_API_KEY`
@@ -225,7 +225,7 @@ Notas:
 - [ ] Existe política RLS para que el padre lea su invitación aceptada
 - [ ] Existen políticas RLS para `parent_children` (staff lee las de su daycare, padres leen las propias)
 - [ ] El paquete `resend` está instalado en `dependencies`
-- [ ] Existe `RESEND_API_KEY` en `.env.local`
+- [ ] Existe `RESEND_API_KEY` en `.env` (ya configurada)
 - [ ] Existe `utils/email/resend.ts` con la función `sendInvitationEmail()`
 - [ ] Existe `app/actions/invitations.ts` con Server Actions `sendInvitation()` y `activateParent()`
 - [ ] `LinkParentDialog` llama a `sendInvitation()` al hacer "Enviar invitación"
