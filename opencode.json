@@ -32,6 +32,10 @@
     "db-migrate": {
       "description": "Gestiona migraciones de base de datos: detecta gaps, genera SQL, aplica y verifica integridad",
       "template": "Carga y sigue el agente db-migrator en .opencode/agents/db-migrator.md.\n\nTarea: $ARGUMENTS"
+    },
+    "a11y": {
+      "description": "Revisa y corrige accesibilidad WCAG 2.2 AA en un componente",
+      "template": "Carga y sigue el agente accessibility-checker en .opencode/agents/accessibility-checker.md.\n\nArchivo: $ARGUMENTS"
     }
   }
 }
