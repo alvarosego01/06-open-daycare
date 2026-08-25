@@ -28,6 +28,10 @@
     "spec": {
       "description": "Crea especificaciones de pantallas y funcionalidades",
       "template": "Carga y sigue la skill spec en .agents/skills/spec/SKILL.md.\n\nFeature: $ARGUMENTS"
+    },
+    "db-migrate": {
+      "description": "Gestiona migraciones de base de datos: detecta gaps, genera SQL, aplica y verifica integridad",
+      "template": "Carga y sigue el agente db-migrator en .opencode/agents/db-migrator.md.\n\nTarea: $ARGUMENTS"
     }
   }
 }
