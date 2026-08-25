@@ -1,37 +1,69 @@
-import type { Post } from "@/data/posts";
+import type { Post, PostCategory } from "@/data/posts";
+import Link from "next/link";
 
 interface PostCardProps {
   post: Post;
 }
 
-export default function PostCard({ post }: PostCardProps) {
-  const badgeConfig = {
-    achievement: {
-      label: "LOGRO",
-      bgColor: "bg-[#CFEBD8]",
-      dotColor: "bg-[#3E9B6C]",
-      textColor: "text-[#3E9B6C]",
-    },
-    activity: {
-      label: "ACTIVIDAD",
-      bgColor: "bg-[#C7E7F1]",
-      dotColor: "bg-[#2E89A6]",
-      textColor: "text-[#2E89A6]",
-    },
-    announcement: {
-      label: "ANUNCIO",
-      bgColor: "bg-[#CCD8F4]",
-      dotColor: "bg-[#4E72C8]",
-      textColor: "text-[#4E72C8]",
-    },
-  };
+type BadgeConfig = {
+  label: string;
+  bgColor: string;
+  dotColor: string;
+  textColor: string;
+};
 
-  const badge = badgeConfig[post.type];
+const badgeConfig: Record<PostCategory, BadgeConfig> = {
+  comida: {
+    label: "COMIDA",
+    bgColor: "bg-[#9A7B1E]",
+    dotColor: "bg-[#FFFFFF]",
+    textColor: "text-[#FFFFFF]",
+  },
+  siesta: {
+    label: "SIESTA",
+    bgColor: "bg-[#E7DCF6]",
+    dotColor: "bg-[#7B5FC0]",
+    textColor: "text-[#7B5FC0]",
+  },
+  actividad: {
+    label: "ACTIVIDAD",
+    bgColor: "bg-[#2E89A6]",
+    dotColor: "bg-[#FFFFFF]",
+    textColor: "text-[#FFFFFF]",
+  },
+  logro: {
+    label: "LOGRO",
+    bgColor: "bg-[#CFEBD8]",
+    dotColor: "bg-[#3E9B6C]",
+    textColor: "text-[#3E9B6C]",
+  },
+  animo: {
+    label: "ÁNIMO",
+    bgColor: "bg-[#F9D2DE]",
+    dotColor: "bg-[#C56486]",
+    textColor: "text-[#C56486]",
+  },
+  foto: {
+    label: "FOTO",
+    bgColor: "bg-[#FBD8CC]",
+    dotColor: "bg-[#D9684A]",
+    textColor: "text-[#D9684A]",
+  },
+  anuncio: {
+    label: "ANUNCIO",
+    bgColor: "bg-[#CCD8F4]",
+    dotColor: "bg-[#4E72C8]",
+    textColor: "text-[#4E72C8]",
+  },
+};
+
+export default function PostCard({ post }: PostCardProps) {
+  const badge = badgeConfig[post.category];
 
   return (
-    <div className="bg-card border border-border rounded-[20px] px-5 py-5 shadow-[0_4px_16px_-12px_rgba(120,90,60,0.5)]">
+    <article className="bg-card border border-border rounded-[20px] px-5 py-5 shadow-[0_4px_16px_-12px_rgba(120,90,60,0.5)]">
       <div className="flex items-center gap-3 mb-3.5">
-        {post.type === "announcement" ? (
+        {post.category === "anuncio" ? (
           <div
             className="w-11 h-11 rounded-full flex items-center justify-center flex-none"
             style={{
@@ -40,6 +72,7 @@ export default function PostCard({ post }: PostCardProps) {
             }}
           >
             <svg
+              aria-hidden="true"
               width="20"
               height="20"
               viewBox="0 0 24 24"
@@ -96,9 +129,10 @@ export default function PostCard({ post }: PostCardProps) {
         {post.content}
       </p>
 
-      {post.type === "activity" && post.photoPlaceholder && (
+      {post.photos && post.photos.length > 0 && (
         <div className="flex flex-col items-center justify-center gap-2 mt-3.5 border border-dashed border-[#DBCDBA] rounded-[16px] bg-[#F4ECE1] h-[200px] text-[#B0A290]">
           <svg
+            aria-hidden="true"
             width="30"
             height="30"
             viewBox="0 0 24 24"
@@ -112,13 +146,14 @@ export default function PostCard({ post }: PostCardProps) {
             <circle cx="9" cy="9" r="2" />
             <path d="m21 15-3.6-3.6a2 2 0 0 0-2.8 0L6 21" />
           </svg>
-          <span className="text-[13.5px]">{post.photoPlaceholder}</span>
+          <span className="text-[13.5px]">Foto · {post.category}</span>
         </div>
       )}
 
       <div className="flex items-center gap-[18px] mt-4 pt-3.5 border-t border-[#F0E6D8]">
         <span className="flex items-center gap-[7px] text-[#E0654A] font-bold text-[14px]">
           <svg
+            aria-hidden="true"
             width="19"
             height="19"
             viewBox="0 0 24 24"
@@ -134,6 +169,7 @@ export default function PostCard({ post }: PostCardProps) {
         </span>
         <span className="flex items-center gap-[7px] text-[#94887B] font-bold text-[14px]">
           <svg
+            aria-hidden="true"
             width="18"
             height="18"
             viewBox="0 0 24 24"
@@ -148,13 +184,14 @@ export default function PostCard({ post }: PostCardProps) {
           {post.comments}
         </span>
         <span className="flex-1" />
-        <a
+        <Link
           href="#"
+          aria-label={`Editar publicación de ${post.author.name}`}
           className="text-[#C5503A] font-extrabold text-[14px]"
         >
           Editar
-        </a>
+        </Link>
       </div>
-    </div>
+    </article>
   );
 }

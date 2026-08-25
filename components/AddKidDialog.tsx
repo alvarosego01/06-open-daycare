@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useTransition } from 'react';
+import { useState, useCallback, useMemo, useTransition } from 'react';
 import Dialog from '@/components/Dialog';
 import FormField from '@/components/ui/FormField';
 import { addChild } from '@/app/kids/actions';
@@ -20,6 +20,8 @@ const emptyForm = {
   notas: '',
 };
 
+type FormFieldName = keyof typeof emptyForm;
+
 type FormErrors = {
   nombre: boolean;
   fecha: boolean;
@@ -28,24 +30,32 @@ type FormErrors = {
 
 const emptyErrors: FormErrors = { nombre: false, fecha: false, sala: false };
 
+const errorMessages: Record<keyof FormErrors, string> = {
+  nombre: 'El nombre es obligatorio',
+  fecha: 'La fecha de nacimiento es obligatoria',
+  sala: 'Seleccioná una sala',
+};
+
 export default function AddKidDialog({ open, onClose, rooms }: AddKidDialogProps) {
   const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState(emptyErrors);
+  const [serverError, setServerError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  const update = (field: keyof typeof emptyForm) => (value: string) => {
+  const update = useCallback((field: FormFieldName, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: false }));
-  };
+  }, []);
 
-  const handleGuardar = () => {
+  const handleGuardar = useCallback(() => {
     const nextErrors: FormErrors = {
       nombre: form.nombre.trim() === '',
       fecha: form.fecha.trim() === '',
       sala: form.sala === '',
     };
     setErrors(nextErrors);
+    setServerError(null);
 
     if (nextErrors.nombre || nextErrors.fecha || nextErrors.sala) return;
 
@@ -60,7 +70,7 @@ export default function AddKidDialog({ open, onClose, rooms }: AddKidDialogProps
       const result = await addChild(formData);
 
       if (result.error) {
-        alert(`Error: ${result.error}`);
+        setServerError(result.error);
       } else {
         setForm(emptyForm);
         setErrors(emptyErrors);
@@ -68,18 +78,22 @@ export default function AddKidDialog({ open, onClose, rooms }: AddKidDialogProps
         router.refresh();
       }
     });
-  };
+  }, [form, onClose, router]);
 
   const handleCancelar = useCallback(() => {
     setForm(emptyForm);
     setErrors(emptyErrors);
+    setServerError(null);
     onClose();
   }, [onClose]);
 
-  const roomOptions = rooms.map((room) => ({ value: room.id, label: room.name }));
+  const roomOptions = useMemo(
+    () => rooms.map((room) => ({ value: room.id, label: room.name })),
+    [rooms]
+  );
 
   return (
-    <Dialog open={open} onClose={handleCancelar}>
+    <Dialog open={open} onClose={handleCancelar} ariaLabel="Agregar niño">
       <div
         className="flex items-center justify-between px-[26px] py-5"
         style={{ borderBottom: '1px solid #ECE0D0' }}
@@ -104,58 +118,70 @@ export default function AddKidDialog({ open, onClose, rooms }: AddKidDialogProps
       </div>
 
       <div className="px-[26px] py-6">
+        {serverError && (
+          <p
+            role="alert"
+            className="mb-4 text-[13.5px] font-bold text-[#D9583C] bg-[#FBE6DF] border border-[#F0C3B5] rounded-[12px] px-4 py-3"
+          >
+            {serverError}
+          </p>
+        )}
+
         <FormField
+          id="kid-nombre"
           label="NOMBRE COMPLETO"
           renderAs="input"
           placeholder="Ej. Martina López"
           value={form.nombre}
-          onChange={update('nombre')}
-          readOnly={false}
+          onChange={(value) => update('nombre', value)}
           hasError={errors.nombre}
+          errorMessage={errors.nombre ? errorMessages.nombre : undefined}
         />
 
         <div className="flex gap-[14px] mb-[18px]">
           <div className="flex-1">
             <FormField
+              id="kid-fecha"
               label="FECHA DE NACIMIENTO"
               renderAs="input"
               placeholder="dd/mm/aaaa"
               value={form.fecha}
-              onChange={update('fecha')}
-              readOnly={false}
+              onChange={(value) => update('fecha', value)}
               hasError={errors.fecha}
+              errorMessage={errors.fecha ? errorMessages.fecha : undefined}
             />
           </div>
           <div className="flex-1">
             <FormField
+              id="kid-sala"
               label="SALA"
               renderAs="select"
               placeholder="Seleccionar…"
               value={form.sala}
-              onChange={update('sala')}
-              readOnly={false}
+              onChange={(value) => update('sala', value)}
               hasError={errors.sala}
+              errorMessage={errors.sala ? errorMessages.sala : undefined}
               options={roomOptions}
             />
           </div>
         </div>
 
         <FormField
+          id="kid-alergias"
           label="ALERGIAS (ETIQUETAS)"
           renderAs="input"
           placeholder="Ej. Maní, Lactosa"
           value={form.alergias}
-          onChange={update('alergias')}
-          readOnly={false}
+          onChange={(value) => update('alergias', value)}
         />
 
         <FormField
+          id="kid-notas"
           label="NOTAS MÉDICAS"
           renderAs="textarea"
           placeholder="Indicaciones, medicación, contactos…"
           value={form.notas}
-          onChange={update('notas')}
-          readOnly={false}
+          onChange={(value) => update('notas', value)}
         />
       </div>
     </Dialog>

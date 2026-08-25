@@ -57,7 +57,6 @@ export default function LoginPage() {
               name="email"
               value={email}
               onChange={setEmail}
-              readOnly={false}
             />
             <FormField
               label="CONTRASEÑA"
@@ -66,7 +65,6 @@ export default function LoginPage() {
               placeholder="••••••••"
               value={password}
               onChange={setPassword}
-              readOnly={false}
             />
 
             <div className="text-right mb-5">

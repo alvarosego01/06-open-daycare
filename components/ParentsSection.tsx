@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { kids, type Parent } from "@/data/kids";
 import LinkParentDialog, { generateInvitationCode } from "@/components/LinkParentDialog";
 
@@ -17,23 +17,19 @@ export default function ParentsSection({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [invitationCode, setInvitationCode] = useState("");
 
-  const kid = kids.find((k) => k.id === kidId);
-  const kidName = kid?.name ?? "";
+  const kidName = useMemo(
+    () => kids.find((k) => k.id === kidId)?.name ?? "",
+    [kidId]
+  );
 
   const openDialog = () => {
     setInvitationCode(generateInvitationCode());
     setDialogOpen(true);
   };
 
-  const handleParentAdded = (parent: Parent) => {
+  const handleParentAdded = useCallback((parent: Parent) => {
     setParents((prev) => [...prev, parent]);
-
-    const kid = kids.find((k) => k.id === kidId);
-    if (kid) {
-      kid.parents.push(parent);
-      kid.parentCount = kid.parents.length;
-    }
-  };
+  }, []);
 
   return (
     <div className="bg-card border border-border rounded-2xl p-4 px-[18px]">
@@ -59,12 +55,11 @@ export default function ParentsSection({
               </div>
             </div>
             <span
-              className="flex-none text-[10.5px] font-extrabold py-1 px-[9px] rounded-full"
-              style={
+              className={`flex-none text-[10.5px] font-extrabold py-1 px-[9px] rounded-full ${
                 parent.status === "active"
-                  ? { backgroundColor: "#CFEBD8", color: "#3E9B6C" }
-                  : { backgroundColor: "#F7E7A6", color: "#9A7B1E" }
-              }
+                  ? "bg-[#CFEBD8] text-[#3E9B6C]"
+                  : "bg-[#F7E7A6] text-[#9A7B1E]"
+              }`}
             >
               {parent.status === "active" ? "ACTIVA" : "PENDIENTE"}
             </span>
@@ -73,7 +68,8 @@ export default function ParentsSection({
         <button
           type="button"
           onClick={openDialog}
-          className="flex items-center gap-3 pt-2"
+          aria-label="Vincular otro padre"
+          className="flex items-center gap-3 pt-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C5503A]"
         >
           <span className="w-10 h-10 rounded-full border-[1.5px] border-dashed border-[#D8CBBA] flex items-center justify-center text-[#B0A290] flex-none">
             <svg

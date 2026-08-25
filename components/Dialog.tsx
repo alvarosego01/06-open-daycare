@@ -6,9 +6,14 @@ type DialogProps = {
   open: boolean;
   onClose: () => void;
   children: ReactNode;
+  ariaLabel?: string;
+  maxWidth?: string;
 };
 
-export default function Dialog({ open, onClose, children }: DialogProps) {
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+
+export default function Dialog({ open, onClose, children, ariaLabel, maxWidth = "md:max-w-[520px]" }: DialogProps) {
   const [mounted, setMounted] = useState(open);
   const [animating, setAnimating] = useState(open);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -33,7 +38,26 @@ export default function Dialog({ open, onClose, children }: DialogProps) {
   useEffect(() => {
     if (!open) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusable = Array.from(
+          dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+        ).filter((el) => el.offsetParent !== null);
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const active = document.activeElement;
+        if (e.shiftKey && (active === first || !dialogRef.current.contains(active))) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
@@ -67,6 +91,7 @@ export default function Dialog({ open, onClose, children }: DialogProps) {
       className="fixed inset-0 z-50 flex items-center justify-center"
       role="dialog"
       aria-modal="true"
+      aria-label={ariaLabel}
     >
       <div
         className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-200 ${
@@ -79,7 +104,7 @@ export default function Dialog({ open, onClose, children }: DialogProps) {
         tabIndex={-1}
         className={`relative z-10 w-full transition-all duration-200 ease-out
           max-md:fixed max-md:inset-0 max-md:max-w-none max-md:rounded-none
-          md:max-w-[520px] md:rounded-[24px] md:border md:border-border
+          ${maxWidth} md:rounded-[24px] md:border md:border-border
           ${animating ? "opacity-100 scale-100" : "opacity-0 scale-[0.97]"}
         `}
         style={{

@@ -1,6 +1,7 @@
 "use client";
 
 type FormFieldProps = {
+  id?: string;
   label: string;
   type?: string;
   placeholder?: string;
@@ -18,6 +19,7 @@ type FormFieldProps = {
 };
 
 export default function FormField({
+  id,
   label,
   type = "text",
   placeholder,
@@ -26,7 +28,7 @@ export default function FormField({
   onChange,
   variant = "default",
   borderColor,
-  readOnly = true,
+  readOnly = false,
   hasError = false,
   errorMessage,
   rows = 3,
@@ -54,6 +56,7 @@ export default function FormField({
       case "textarea":
         return (
           <textarea
+            id={id}
             name={name}
             value={value}
             onChange={handleChange}
@@ -72,6 +75,7 @@ export default function FormField({
         return (
           <div className="relative">
             <select
+              id={id}
               name={name}
               value={value}
               onChange={handleChange}
@@ -106,6 +110,7 @@ export default function FormField({
       default:
         return (
           <input
+            id={id}
             name={name}
             type={type}
             value={value}
@@ -121,7 +126,10 @@ export default function FormField({
 
   return (
     <div className="mb-[18px]">
-      <label className="block text-[12px] font-bold tracking-[0.7px] text-[#94887B] mb-2">
+      <label
+        htmlFor={id}
+        className="block text-[12px] font-bold tracking-[0.7px] text-[#94887B] mb-2"
+      >
         {label}
       </label>
       {renderField()}

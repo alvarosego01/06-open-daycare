@@ -1,11 +1,16 @@
-import Sidebar from "@/components/Sidebar";
+"use client";
+
+import { useRef } from "react";
+import Sidebar, { type SidebarHandle } from "@/components/Sidebar";
 import PostCard from "@/components/PostCard";
 import { posts } from "@/data/posts";
 
 export default function Home() {
+  const sidebarRef = useRef<SidebarHandle>(null);
+
   return (
     <div className="flex min-h-screen bg-cream">
-      <Sidebar activeItem="feed" />
+      <Sidebar ref={sidebarRef} activeItem="feed" />
 
       <main className="flex-1 min-w-0 h-screen overflow-y-auto">
         <div className="max-w-[760px] w-full mx-auto px-5 py-8 md:px-10 md:py-[34px] pb-20">
@@ -21,14 +26,16 @@ export default function Home() {
             </p>
           </div>
 
-          <a
-            href="#"
-            className="flex items-center gap-3.5 bg-card border border-border rounded-[18px] px-[18px] py-3.5 mb-6 shadow-[0_4px_14px_-10px_rgba(120,90,60,0.4)]"
+          <button
+            type="button"
+            onClick={() => sidebarRef.current?.openCreatePost()}
+            className="flex items-center gap-3.5 bg-card border border-border rounded-[18px] px-[18px] py-3.5 mb-6 shadow-[0_4px_14px_-10px_rgba(120,90,60,0.4)] cursor-pointer w-full"
+            aria-label="Compartí un momento — crear publicación"
           >
             <div className="w-10 h-10 rounded-full bg-[#F2937A] text-white font-heading font-semibold text-[16px] flex items-center justify-center flex-none">
               C
             </div>
-            <span className="flex-1 text-[#A89A8B] text-[15px]">
+            <span className="flex-1 text-[#A89A8B] text-[15px] text-left">
               Compartí un momento…
             </span>
             <span className="w-[38px] h-[38px] rounded-xl bg-[#FBE3D8] text-[#E0654A] flex items-center justify-center">
@@ -46,7 +53,7 @@ export default function Home() {
                 <circle cx="12" cy="13" r="4" />
               </svg>
             </span>
-          </a>
+          </button>
 
           <div className="flex items-center gap-3.5 mb-3.5">
             <span className="text-[12.5px] font-extrabold tracking-[0.8px] text-[#8A7C6D]">

@@ -145,7 +145,7 @@ export default function LinkParentDialog({
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} ariaLabel="Vincular padre o madre">
       <div
         className="flex items-center justify-between px-[26px] py-5"
         style={{ borderBottom: "1px solid #ECE0D0" }}
@@ -209,7 +209,6 @@ export default function LinkParentDialog({
           onChange={(value) =>
             setForm((prev) => ({ ...prev, name: value }))
           }
-          readOnly={false}
           hasError={errors.name}
         />
 
@@ -221,7 +220,6 @@ export default function LinkParentDialog({
           onChange={(value) =>
             setForm((prev) => ({ ...prev, email: value }))
           }
-          readOnly={false}
           hasError={errors.email}
         />
 

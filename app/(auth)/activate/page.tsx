@@ -92,7 +92,6 @@ export default function ActivatePage() {
           value={code}
           onChange={setCode}
           placeholder="Ej. 7K4P9"
-          readOnly={false}
         />
         <FormField
           label="EMAIL"
@@ -100,7 +99,6 @@ export default function ActivatePage() {
           value={email}
           onChange={setEmail}
           placeholder="tu@email.com"
-          readOnly={false}
         />
         <FormField
           label="CREAR CONTRASEÑA"
@@ -108,7 +106,6 @@ export default function ActivatePage() {
           value={password}
           onChange={setPassword}
           placeholder="Mínimo 6 caracteres"
-          readOnly={false}
         />
 
         <label

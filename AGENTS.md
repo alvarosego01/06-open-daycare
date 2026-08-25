@@ -39,7 +39,10 @@ When implementing UI, match colors, spacing, and typography from the mockups. Th
 
 - **Playwright** — screenshots and browser automation output go in `.playwright-mcp/`
 - **Context7** — use for up-to-date framework/library documentation
-- **Supabase** — database, auth, edge functions, storage, realtime. Use `supabase` skill before any Supabase task
+- **Supabase** — database, auth, edge functions, storage, realtime, branching, logs, debugging. Use `supabase` skill before any Supabase task
+  - Connected to project `zokhoprlchxfteawzwkj` via remote MCP (`https://mcp.supabase.com/mcp`)
+  - Auth validated with `opencode mcp auth supabase` (OAuth credentials already in place)
+  - Provides tools: schema management, SQL execution, edge functions deploy, logs querying, advisory checks, branch management, and more
 
 ## Supabase
 

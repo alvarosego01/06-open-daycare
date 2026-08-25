@@ -1,33 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Open Daycare
+
+Aplicacion web para la gestion de una guarderia/estancia infantil. Permite a padres y administradores gestionar ninos, publicaciones, avisos, perfiles y la comunicacion diaria (resumen del dia, fotos, etc.).
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16.3.0 (App Router) + React 19 |
+| Styling | Tailwind CSS v4 |
+| Backend / Auth / DB | Supabase (Postgres, Auth, Storage, Edge Functions, Realtime) |
+| Email | Resend |
+| Package manager | pnpm |
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev        # http://localhost:3020
+pnpm build      # production build
+pnpm lint       # eslint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create `.env.local`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<your-publishable-key>
+```
 
 ## Supabase
 
-This project uses Supabase as its backend. The following packages are installed for Next.js integration:
-
-- **`@supabase/supabase-js`** — Supabase client for database queries, auth, storage, and realtime
-- **`@supabase/ssr`** — helpers for using Supabase in Next.js Server Components, Client Components, and middleware with proper cookie/session handling
-
-### Client helpers
+Client helpers in `utils/supabase/`:
 
 | Helper | Path | Usage |
 |---|---|---|
@@ -35,26 +40,38 @@ This project uses Supabase as its backend. The following packages are installed 
 | Browser client | `utils/supabase/client.ts` | Client Components (`"use client"`) |
 | Middleware client | `utils/supabase/middleware.ts` | `middleware.ts` at project root (session refresh) |
 
-### Environment variables
+Schema migrations live in `migrations/`. Use `supabase db query` for iteration, then `supabase db pull` to generate migrations.
 
-Set in `.env.local`:
+## MCP Servers
 
+This project uses 3 MCP servers configured in `opencode.json` and globally:
+
+| MCP | Type | Purpose |
+|---|---|---|
+| **Supabase** | Remote (`https://mcp.supabase.com/mcp`) | Database, auth, edge functions, storage, realtime, logs, branching. Project ref: `zokhoprlchxfteawzwkj` |
+| **Playwright** | Local (`npx -y @playwright/mcp`) | Browser automation, screenshots, visual testing |
+| **Context7** | Remote (`https://mcp.context7.com/mcp`) | Up-to-date framework/library documentation |
+
+### Supabase MCP Auth
+
+Validate or refresh Supabase MCP credentials:
+
+```bash
+opencode mcp auth supabase
 ```
-NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<your-publishable-key>
-```
 
-## Learn More
+This opens an OAuth flow in the browser. Once authenticated, credentials are stored locally and reused across sessions.
 
-To learn more about Next.js, take a look at the following resources:
+## Design
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+UI mockups are in `references/`:
+- `references/pantallas/*.dc.html` — self-contained HTML mockups for every screen
+- `references/screenshots/*.png` — screenshots of composed screens
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Palette: warm cream/peach (`#F6ECDF` bg, `#FFFDF9` cards, `#F2937A`/`#EE8164` accents, `#3F362E` text). Fonts: **Fredoka** (headings), **Nunito** (body), **Geist** (loaded by default in `app/layout.tsx`).
 
-## Deploy on Vercel
+## Spec-Driven Development
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `/spec` — create specifications
+- `/spec-impl` — implement approved specs
+- `/spec-rev` — verify acceptance criteria
