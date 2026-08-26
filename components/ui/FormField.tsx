@@ -93,6 +93,7 @@ export default function FormField({
               ))}
             </select>
             <svg
+              aria-hidden="true"
               className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
               width="16"
               height="16"
@@ -128,13 +129,13 @@ export default function FormField({
     <div className="mb-[18px]">
       <label
         htmlFor={id}
-        className="block text-[12px] font-bold tracking-[0.7px] text-[#94887B] mb-2"
+        className="block text-[12px] font-bold tracking-[0.7px] text-[#7A6F64] mb-2"
       >
         {label}
       </label>
       {renderField()}
       {hasError && errorMessage && (
-        <p className="mt-1 text-[12px] text-[#D9583C]">{errorMessage}</p>
+        <p role="alert" className="mt-1 text-[12px] text-[#D9583C]">{errorMessage}</p>
       )}
     </div>
   );

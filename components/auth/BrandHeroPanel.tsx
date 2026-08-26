@@ -7,6 +7,7 @@ export default function BrandHeroPanel() {
       <div className="flex items-center gap-[13px] relative">
         <div className="w-[46px] h-[46px] rounded-[14px] bg-white/[.22] flex items-center justify-center">
           <svg
+            aria-hidden="true"
             width="26"
             height="26"
             viewBox="0 0 24 24"
@@ -26,11 +27,11 @@ export default function BrandHeroPanel() {
       </div>
 
       <div className="relative">
-        <h1 className="font-heading font-semibold text-[42px] leading-[1.12] mb-[18px]">
+        <h2 className="font-heading font-semibold text-[42px] leading-[1.12] mb-[18px]">
           El día de cada niño,
           <br />
           compartido con su familia.
-        </h1>
+        </h2>
         <p className="text-[17px] leading-[1.6] max-w-[430px] text-white/90">
           Publicá momentos, gestioná las salas y mantené a las familias cerca,
           desde un solo lugar.
@@ -38,7 +39,7 @@ export default function BrandHeroPanel() {
       </div>
 
       <div className="relative text-[14px] text-white/90">
-        🌿 Guardería Sala Soles
+        <span aria-hidden="true">🌿</span> Guardería Sala Soles
       </div>
     </div>
   );

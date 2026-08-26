@@ -36,6 +36,10 @@
     "a11y": {
       "description": "Revisa y corrige accesibilidad WCAG 2.2 AA en un componente",
       "template": "Carga y sigue el agente accessibility-checker en .opencode/agents/accessibility-checker.md.\n\nArchivo: $ARGUMENTS"
+    },
+    "db-security": {
+      "description": "Audita seguridad de RLS y previene fugas de datos entre niños/padres",
+      "template": "Carga y sigue el agente db-security-auditor en .opencode/agents/db-security-auditor.md.\n\nTarea: $ARGUMENTS"
     }
   }
 }

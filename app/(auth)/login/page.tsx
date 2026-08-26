@@ -41,17 +41,18 @@ export default function LoginPage() {
     <div className="min-h-screen grid lg:grid-cols-[1.05fr_1fr]">
       <BrandHeroPanel />
 
-      <div className="flex items-center justify-center p-10">
+      <main className="flex items-center justify-center p-10">
         <div className="w-full max-w-[392px]">
-          <h2 className="font-heading font-semibold text-[30px] mb-1.5 text-text-primary">
+          <h1 className="font-heading font-semibold text-[30px] mb-1.5 text-text-primary">
             Iniciar sesión
-          </h2>
-          <p className="mb-7 text-[#94887B] text-[15px]">
+          </h1>
+          <p className="mb-7 text-[#7A6F64] text-[15px]">
             Ingresá para ver el día de hoy.
           </p>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} aria-label="Formulario de inicio de sesión">
             <FormField
+              id="login-email"
               label="EMAIL"
               type="email"
               name="email"
@@ -59,6 +60,7 @@ export default function LoginPage() {
               onChange={setEmail}
             />
             <FormField
+              id="login-password"
               label="CONTRASEÑA"
               type="password"
               name="password"
@@ -68,33 +70,40 @@ export default function LoginPage() {
             />
 
             <div className="text-right mb-5">
-              <span className="text-[#C5503A] text-[13.5px] font-bold cursor-pointer">
+              <a
+                href="/forgot-password"
+                className="text-[#B5442E] text-[13.5px] font-bold hover:underline focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 rounded"
+              >
                 ¿Olvidaste tu contraseña?
-              </span>
+              </a>
             </div>
 
-            <PrimaryButton type="submit">
+            <PrimaryButton type="submit" disabled={loading} aria-busy={loading}>
               {loading ? "Iniciando sesión..." : "Iniciar sesión"}
             </PrimaryButton>
           </form>
 
           {error && (
-            <p className="mt-4 text-center text-[14px] text-[#D9583C] font-semibold">
+            <p
+              role="alert"
+              aria-live="assertive"
+              className="mt-4 text-center text-[14px] text-[#D9583C] font-semibold"
+            >
               {error}
             </p>
           )}
 
-          <p className="text-center mt-6 text-[#94887B] text-[14.5px]">
+          <p className="text-center mt-6 text-[#7A6F64] text-[14.5px]">
             ¿Te invitó la guardería?{" "}
             <a
               href="/activate"
-              className="text-[#C5503A] font-extrabold"
+              className="text-[#C5503A] font-extrabold focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 rounded"
             >
               Activá tu cuenta
             </a>
           </p>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
