@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import StaffSidebar from "@/components/staff/StaffSidebar";
 
-export default async function RootPage() {
+export default async function StaffLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -18,17 +19,14 @@ export default async function RootPage() {
     .eq("id", user.id)
     .single();
 
-  if (!userData) {
-    redirect("/login");
-  }
-
-  if (userData.role === "staff" || userData.role === "admin") {
-    redirect("/staff/feed");
-  }
-
-  if (userData.role === "parent") {
+  if (!userData || (userData.role !== "staff" && userData.role !== "admin")) {
     redirect("/family/feed");
   }
 
-  redirect("/login");
+  return (
+    <div className="flex min-h-screen bg-cream">
+      <StaffSidebar />
+      {children}
+    </div>
+  );
 }

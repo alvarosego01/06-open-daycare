@@ -20,7 +20,7 @@ export default function ArchiveButton({ childId, childName }: ArchiveButtonProps
     if (result.error) {
       alert(`Error: ${result.error}`);
     } else {
-      router.push('/kids');
+      router.push('/staff/kids');
     }
   };
 

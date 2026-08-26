@@ -20,5 +20,29 @@ export async function login(formData: FormData) {
     return { error: "Email o contrasena incorrectos" };
   }
 
-  redirect("/");
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const { data: userData } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (!userData) {
+    redirect("/login");
+  }
+
+  if (userData.role === "staff" || userData.role === "admin") {
+    redirect("/staff/feed");
+  }
+
+  if (userData.role === "parent") {
+    redirect("/family/feed");
+  }
+
+  redirect("/login");
 }

@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo, useTransition } from 'react';
 import Dialog from '@/components/Dialog';
 import FormField from '@/components/ui/FormField';
-import { addChild } from '@/app/kids/actions';
+import { addChild } from '@/app/staff/kids/actions';
 import { useRouter } from 'next/navigation';
 
 type AddKidDialogProps = {

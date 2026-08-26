@@ -101,7 +101,7 @@ export async function addChild(formData: FormData) {
       return { error: `Failed to add child: ${error.message}` };
     }
 
-    revalidatePath('/kids');
+    revalidatePath('/staff/kids');
     return { success: true };
   } catch (err) {
     return { error: `Unexpected error: ${err instanceof Error ? err.message : 'Unknown error'}` };
@@ -121,7 +121,7 @@ export async function archiveChild(childId: string) {
       return { error: `Failed to archive child: ${error.message}` };
     }
 
-    revalidatePath('/kids');
+    revalidatePath('/staff/kids');
     return { success: true };
   } catch (err) {
     return { error: `Unexpected error: ${err instanceof Error ? err.message : 'Unknown error'}` };

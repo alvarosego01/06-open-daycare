@@ -1,7 +1,3 @@
-/**
- * @deprecated This component is deprecated. Use `components/staff/StaffSidebar.tsx` or `components/family/FamilySidebar.tsx` instead.
- */
-
 "use client";
 
 import { useState, useEffect, useCallback, useImperativeHandle, type Ref } from "react";
@@ -13,13 +9,13 @@ import CreatePostDialog from "@/components/CreatePostDialog";
 
 type ActiveItem = "feed" | "kids" | "notices" | "account";
 
-export type SidebarHandle = {
+export type StaffSidebarHandle = {
   openCreatePost: () => void;
 };
 
-type SidebarProps = {
+type StaffSidebarProps = {
   activeItem?: ActiveItem;
-  ref?: Ref<SidebarHandle>;
+  ref?: Ref<StaffSidebarHandle>;
   onPostSaved?: () => void;
 };
 
@@ -113,15 +109,15 @@ function MenuIcon() {
 // --- Static data (outside component to avoid re-creation) -------------------
 
 const NAV_ITEMS = [
-  { key: "feed" as const, label: "Feed", href: "/", icon: <FeedIcon /> },
-  { key: "kids" as const, label: "Niños", href: "/kids", icon: <KidsIcon /> },
+  { key: "feed" as const, label: "Feed", href: "/staff/feed", icon: <FeedIcon /> },
+  { key: "kids" as const, label: "Niños", href: "/staff/kids", icon: <KidsIcon /> },
   { key: "notices" as const, label: "Avisos", href: "#", icon: <NoticesIcon /> },
   { key: "account" as const, label: "Mi cuenta", href: "#", icon: <AccountIcon /> },
 ] as const;
 
 // --- Component ---------------------------------------------------------------
 
-export default function Sidebar({ activeItem = "feed", ref, onPostSaved }: SidebarProps) {
+export default function StaffSidebar({ activeItem = "feed", ref, onPostSaved }: StaffSidebarProps) {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [displayName, setDisplayName] = useState("Usuario");

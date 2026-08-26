@@ -1,26 +1,15 @@
-/**
- * @deprecated This component is deprecated. Use `components/staff/StaffSidebar.tsx` or `components/family/FamilySidebar.tsx` instead.
- */
-
 "use client";
 
-import { useState, useEffect, useCallback, useImperativeHandle, type Ref } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-import CreatePostDialog from "@/components/CreatePostDialog";
 
 // --- Types -------------------------------------------------------------------
 
-type ActiveItem = "feed" | "kids" | "notices" | "account";
+type ActiveItem = "feed" | "account";
 
-export type SidebarHandle = {
-  openCreatePost: () => void;
-};
-
-type SidebarProps = {
+type FamilySidebarProps = {
   activeItem?: ActiveItem;
-  ref?: Ref<SidebarHandle>;
-  onPostSaved?: () => void;
 };
 
 // --- Helpers -----------------------------------------------------------------
@@ -35,31 +24,12 @@ function formatDisplayName(fullName: string): { name: string; initial: string } 
   };
 }
 
-// --- SVG Icons (extracted for readability) -----------------------------------
+// --- SVG Icons ---------------------------------------------------------------
 
 function FeedIcon() {
   return (
     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />
-    </svg>
-  );
-}
-
-function KidsIcon() {
-  return (
-    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="9" cy="7" r="3" />
-      <circle cx="17" cy="9" r="2.4" />
-      <path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 20a5 5 0 0 1 5.5-4.9" />
-    </svg>
-  );
-}
-
-function NoticesIcon() {
-  return (
-    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path d="M13.7 21a2 2 0 0 1-3.4 0" />
     </svg>
   );
 }
@@ -78,14 +48,6 @@ function SunIcon() {
     <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="4" />
       <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-    </svg>
-  );
-}
-
-function PlusIcon() {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 5v14M5 12h14" />
     </svg>
   );
 }
@@ -113,25 +75,17 @@ function MenuIcon() {
 // --- Static data (outside component to avoid re-creation) -------------------
 
 const NAV_ITEMS = [
-  { key: "feed" as const, label: "Feed", href: "/", icon: <FeedIcon /> },
-  { key: "kids" as const, label: "Niños", href: "/kids", icon: <KidsIcon /> },
-  { key: "notices" as const, label: "Avisos", href: "#", icon: <NoticesIcon /> },
-  { key: "account" as const, label: "Mi cuenta", href: "#", icon: <AccountIcon /> },
+  { key: "feed" as const, label: "Feed", href: "/family/feed", icon: <FeedIcon /> },
+  { key: "account" as const, label: "Mi cuenta", href: "/family/account", icon: <AccountIcon /> },
 ] as const;
 
 // --- Component ---------------------------------------------------------------
 
-export default function Sidebar({ activeItem = "feed", ref, onPostSaved }: SidebarProps) {
+export default function FamilySidebar({ activeItem = "feed" }: FamilySidebarProps) {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [displayName, setDisplayName] = useState("Usuario");
   const [avatarInitial, setAvatarInitial] = useState("U");
-  const [createPostOpen, setCreatePostOpen] = useState(false);
-
-  // Expose imperative handle to parent via ref
-  useImperativeHandle(ref, () => ({
-    openCreatePost: () => setCreatePostOpen(true),
-  }), []);
 
   // Fetch user data on mount with stale-response protection
   useEffect(() => {
@@ -168,7 +122,6 @@ export default function Sidebar({ activeItem = "feed", ref, onPostSaved }: Sideb
 
   const handleMobileToggle = useCallback(() => setMobileOpen(true), []);
   const handleBackdropClick = useCallback(() => setMobileOpen(false), []);
-  const handleCreatePostClose = useCallback(() => setCreatePostOpen(false), []);
 
   return (
     <>
@@ -209,19 +162,9 @@ export default function Sidebar({ activeItem = "feed", ref, onPostSaved }: Sideb
             <div className="font-heading font-semibold text-[17px] text-text-primary leading-none">
               OpenDayCare
             </div>
-            <div className="text-[11.5px] text-[#A89A8B] mt-0.5">Sala Soles</div>
+            <div className="text-[11.5px] text-[#A89A8B] mt-0.5">Familia</div>
           </div>
         </a>
-
-        {/* New post button */}
-        <button
-          type="button"
-          onClick={() => setCreatePostOpen(true)}
-          className="flex items-center justify-center gap-2 w-full py-3 rounded-[14px] bg-gradient-to-b from-[#F4977E] to-[#EE8164] text-white font-extrabold text-[14.5px] shadow-[0_8px_18px_-8px_rgba(238,129,100,0.75)] mb-[18px]"
-        >
-          <PlusIcon />
-          Nueva publicación
-        </button>
 
         {/* Navigation */}
         <nav className="flex flex-col gap-1 flex-1">
@@ -251,7 +194,7 @@ export default function Sidebar({ activeItem = "feed", ref, onPostSaved }: Sideb
               <div className="font-extrabold text-[14px] text-text-primary">
                 {displayName}
               </div>
-              <div className="text-[12px] text-[#A89A8B]">Maestra · Soles</div>
+              <div className="text-[12px] text-[#A89A8B]">Familia</div>
             </div>
             <button
               type="button"
@@ -265,9 +208,6 @@ export default function Sidebar({ activeItem = "feed", ref, onPostSaved }: Sideb
           </div>
         </div>
       </aside>
-
-      {/* Create post dialog */}
-      <CreatePostDialog open={createPostOpen} onClose={handleCreatePostClose} onSaved={onPostSaved} />
     </>
   );
 }
