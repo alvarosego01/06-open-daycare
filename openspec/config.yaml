@@ -1,0 +1,44 @@
+schema: spec-driven
+
+context: |
+  Domain: OpenDaycare — plataforma de gestión de guarderías/daycare
+  Permite a staff crear publicaciones (comida, siesta, actividad, logro, foto, anuncio) con fotos
+  Parents ven posts etiquetados a sus hijos y anuncios de su sala
+  
+  Tech stack: Next.js 16 (App Router), React 19, Supabase (PostgreSQL + Auth + Storage), Tailwind CSS v4
+  Packages: @supabase/ssr, @supabase/supabase-js, resend
+  Path alias: @/* maps to ./* (root-level)
+  Fonts: Fredoka (headings), Nunito (body)
+  
+  Conventions:
+  - pnpm only (never npm)
+  - Clean code, English naming for code (variables, functions, types, interfaces)
+  - Visible text in Spanish
+  - Conventional commits
+  - RLS enabled on all public tables
+  - Server Actions for mutations, Server Components for data fetching
+  
+  Roles: admin, staff, parent
+  Key tables: daycares, rooms, users, children, parent_children, posts, post_children, post_photos
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
