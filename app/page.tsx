@@ -1,16 +1,30 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect, useCallback, startTransition } from "react";
 import Sidebar, { type SidebarHandle } from "@/components/Sidebar";
 import PostCard from "@/components/PostCard";
-import { posts } from "@/data/posts";
+import { getPosts, type PostWithRelations } from "@/app/actions/posts";
 
 export default function Home() {
   const sidebarRef = useRef<SidebarHandle>(null);
+  const [posts, setPosts] = useState<PostWithRelations[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchPosts = useCallback(async () => {
+    const data = await getPosts();
+    startTransition(() => {
+      setPosts(data);
+      setLoading(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   return (
     <div className="flex min-h-screen bg-cream">
-      <Sidebar ref={sidebarRef} activeItem="feed" />
+      <Sidebar ref={sidebarRef} activeItem="feed" onPostSaved={fetchPosts} />
 
       <main className="flex-1 min-w-0 h-screen overflow-y-auto">
         <div className="max-w-[760px] w-full mx-auto px-5 py-8 md:px-10 md:py-[34px] pb-20">
@@ -19,11 +33,8 @@ export default function Home() {
               GUARDERÍA · SALA SOLES
             </div>
             <h1 className="font-heading font-semibold text-[30px] m-0 text-text-primary">
-              Buenas, Caro
+              Feed
             </h1>
-            <p className="mt-[5px] text-[#94887B] text-[14.5px]">
-              12 niños · martes 17 jun
-            </p>
           </div>
 
           <button
@@ -33,7 +44,7 @@ export default function Home() {
             aria-label="Compartí un momento — crear publicación"
           >
             <div className="w-10 h-10 rounded-full bg-[#F2937A] text-white font-heading font-semibold text-[16px] flex items-center justify-center flex-none">
-              C
+              +
             </div>
             <span className="flex-1 text-[#A89A8B] text-[15px] text-left">
               Compartí un momento…
@@ -62,11 +73,26 @@ export default function Home() {
             <span className="flex-1 h-px bg-[#E7DAC8]" />
           </div>
 
-          <div className="flex flex-col gap-4">
-            {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex items-center justify-center py-12 text-[#A89A8B] text-[14px]">
+              Cargando publicaciones…
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-[#A89A8B] text-[14px]">
+              No hay publicaciones todavía
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {posts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  onDeleted={fetchPosts}
+                  onEdited={fetchPosts}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>
