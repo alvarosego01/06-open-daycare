@@ -16,6 +16,7 @@ export type SidebarHandle = {
 type SidebarProps = {
   activeItem?: ActiveItem;
   ref?: Ref<SidebarHandle>;
+  onPostSaved?: () => void;
 };
 
 // --- Helpers -----------------------------------------------------------------
@@ -116,7 +117,7 @@ const NAV_ITEMS = [
 
 // --- Component ---------------------------------------------------------------
 
-export default function Sidebar({ activeItem = "feed", ref }: SidebarProps) {
+export default function Sidebar({ activeItem = "feed", ref, onPostSaved }: SidebarProps) {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [displayName, setDisplayName] = useState("Usuario");
@@ -262,7 +263,7 @@ export default function Sidebar({ activeItem = "feed", ref }: SidebarProps) {
       </aside>
 
       {/* Create post dialog */}
-      <CreatePostDialog open={createPostOpen} onClose={handleCreatePostClose} />
+      <CreatePostDialog open={createPostOpen} onClose={handleCreatePostClose} onSaved={onPostSaved} />
     </>
   );
 }

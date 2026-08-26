@@ -3,7 +3,6 @@ export type PostCategory =
   | "siesta"
   | "actividad"
   | "logro"
-  | "animo"
   | "foto"
   | "anuncio";
 
@@ -35,7 +34,6 @@ export const POST_CATEGORY_META: Record<
   siesta: { label: "Siesta", bg: "#E7DCF6", text: "#7B5FC0" },
   actividad: { label: "Actividad", bg: "#2E89A6", text: "#FFFFFF" },
   logro: { label: "Logro", bg: "#CFEBD8", text: "#3E9B6C" },
-  animo: { label: "Ánimo", bg: "#F9D2DE", text: "#C56486" },
   foto: { label: "Foto", bg: "#FBD8CC", text: "#D9684A" },
   anuncio: { label: "Anuncio", bg: "#CCD8F4", text: "#4E72C8" },
 };
